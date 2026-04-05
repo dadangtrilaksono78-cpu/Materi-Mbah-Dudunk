@@ -44,23 +44,40 @@ membelokkan roda, biasanya roda depan, sesuai keinginan pengemudi.
 <button onclick="download()">DOWNLOAD MATERI</button>
 
 <script>
-function download() {
+<script>
+async function download() {
+    const { jsPDF } = window.jspdf;
+
+    let doc = new jsPDF();
+
+    let judul = document.querySelector("h2").innerText;
     let jawaban = document.querySelector(".input-inline").innerText;
 
-    let isi = "STEERING SYSTEM\n\n" +
-              "Jawaban lengkap:\n" +
-              "Steering system (sistem kemudi) adalah sistem pada kendaraan yang berfungsi untuk mengontrol " 
-              + jawaban + 
-              " membelokkan roda, biasanya roda depan, sesuai keinginan pengemudi.";
+    // 🖼️ LOGO (gunakan URL gambar)
+    let logo = "https://upload.wikimedia.org/wikipedia/commons/a/a7/React-icon.svg";
 
-    let blob = new Blob([isi], { type: "text/plain" });
-    let link = document.createElement("a");
+    // tambah logo
+    doc.addImage(logo, "PNG", 10, 10, 20, 20);
 
-    link.href = URL.createObjectURL(blob);
-    link.download = "jawaban.txt";
-    link.click();
+    // judul
+    doc.setFontSize(14);
+    doc.text(judul, 40, 20);
+
+    // isi
+    doc.setFontSize(12);
+    doc.text(
+        "Steering system (sistem kemudi) adalah sistem pada kendaraan yang berfungsi untuk mengontrol " 
+        + jawaban + 
+        " membelokkan roda, biasanya roda depan, sesuai keinginan pengemudi.",
+        10,
+        50
+    );
+
+    doc.save("hasil.pdf");
 }
 </script>
-
+}
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </body>
 </html>
