@@ -45,6 +45,9 @@ membelokkan roda, biasanya roda depan, sesuai keinginan pengemudi.
 
 <script>
 <script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+<script>
 async function download() {
     const { jsPDF } = window.jspdf;
 
@@ -53,28 +56,22 @@ async function download() {
     let judul = document.querySelector("h2").innerText;
     let jawaban = document.querySelector(".input-inline").innerText;
 
-    // 🖼️ LOGO (gunakan URL gambar)
-    let logo = "https://github.com/dadangtrilaksono78-cpu/Materi-Mbah-Dudunk/blob/main/image-Photoroom%20(9).png";
-
-    // tambah logo
-    doc.addImage(logo, "PNG", 10, 10, 20, 20);
-
-    // judul
+    // isi PDF
     doc.setFontSize(14);
-    doc.text(judul, 40, 20);
+    doc.text(judul, 10, 20);
 
-    // isi
     doc.setFontSize(12);
     doc.text(
         "Steering system (sistem kemudi) adalah sistem pada kendaraan yang berfungsi untuk mengontrol " 
         + jawaban + 
         " membelokkan roda, biasanya roda depan, sesuai keinginan pengemudi.",
         10,
-        50
+        40
     );
 
     doc.save("hasil.pdf");
 }
+</script>
 </script>
 }
 </script>
