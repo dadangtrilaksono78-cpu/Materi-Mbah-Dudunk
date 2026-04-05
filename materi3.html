@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Latihan Materi</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <style>
+        body {
+            font-family: Arial;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .input-inline {
+            display: inline-block;
+            border-bottom: 1px dotted black;
+            min-width: 200px;
+            padding: 2px 5px;
+            outline: none;
+        }
+
+        button {
+            padding: 10px;
+            margin-top: 20px;
+            width: 100%;
+        }
+    </style>
+</head>
+
+<body>
+
+<h2>STEERING SYSTEM</h2>
+
+<p>
+Steering system (sistem kemudi) adalah sistem pada kendaraan yang berfungsi untuk mengontrol 
+<span contenteditable="true" class="input-inline"></span> 
+membelokkan roda, biasanya roda depan, sesuai keinginan pengemudi.
+</p>
+
+<button onclick="download()">Download Jawaban</button>
+
+<script>
+function download() {
+    let jawaban = document.querySelector(".input-inline").innerText;
+
+    let isi = "STEERING SYSTEM\n\n" +
+              "Jawaban lengkap:\n" +
+              "Steering system (sistem kemudi) adalah sistem pada kendaraan yang berfungsi untuk mengontrol " 
+              + jawaban + 
+              " membelokkan roda, biasanya roda depan, sesuai keinginan pengemudi.";
+
+    let blob = new Blob([isi], { type: "text/plain" });
+    let link = document.createElement("a");
+
+    link.href = URL.createObjectURL(blob);
+    link.download = "jawaban.txt";
+    link.click();
+}
+</script>
+
+</body>
+</html>
