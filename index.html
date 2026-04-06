@@ -60,12 +60,13 @@ async function download() {
     doc.text(judul, 10, 20);
 
     doc.setFontSize(12);
-    doc.text(
-        "Steering system (sistem kemudi) adalah sistem pada kendaraan yang berfungsi untuk mengontrol " 
-        + jawaban + 
-        " membelokkan roda, biasanya roda depan, sesuai keinginan pengemudi.",
-        10,
-        40
+let teks = "Steering system (sistem kemudi) adalah sistem pada kendaraan yang berfungsi untuk mengontrol " 
+           + jawaban + 
+           " membelokkan roda, biasanya roda depan, sesuai keinginan pengemudi.";
+
+let splitText = doc.splitTextToSize(teks, 180);
+
+doc.text(splitText, 10, 40);
     );
 
     doc.save("hasil.pdf");
