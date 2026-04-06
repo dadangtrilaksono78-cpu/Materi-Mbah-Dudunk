@@ -34,7 +34,8 @@
 <body>
 
 <h2>STEERING SYSTEM</h2>
-
+doc.setLineWidth(0.5);
+doc.line(20, 40, lebarHalaman - 20, 40);
 <p>
 Steering system (sistem kemudi) adalah sistem pada kendaraan yang berfungsi untuk mengontrol 
 <span contenteditable="true" class="input-inline"></span> 
@@ -63,7 +64,9 @@ function download() {
     let jawaban = document.querySelector(".input-inline").innerText;
 
     doc.setFontSize(14);
-    doc.text(judul, 10, 20);
+    let lebarHalaman = doc.internal.pageSize.getWidth();
+doc.setFontSize(16);
+doc.text(judul, lebarHalaman / 2, 35, { align: "center" });
 
     doc.setFontSize(12);
 
@@ -79,7 +82,7 @@ let lebarText = lebarHalaman - marginKiri - marginKanan;
 
 let splitText = doc.splitTextToSize(teks, lebarText);
 
-doc.text(splitText, marginKiri, 40, { lineHeightFactor: 1.5 });
+doc.text(splitText, marginKiri, 50, { lineHeightFactor: 1.5 });
 
     doc.save("hasil.pdf");
 }
