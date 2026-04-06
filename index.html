@@ -62,13 +62,8 @@ function download() {
 
     let lebarHalaman = doc.internal.pageSize.getWidth();
 
-let logo = "https://raw.githubusercontent.com/dadangtrilaksono78-cpu/Materi-Mbah-Dudunk/main/logo.png";
-
-try {
-    doc.addImage(logo, "PNG", 20, 10, 20, 20);
-} catch (e) {
-    console.log("Logo gagal dimuat");
-}
+// LOGO NONAKTIF SEMENTARA
+// doc.addImage(...)
 
     // 📝 JUDUL (DITURUNKAN)
     doc.setFontSize(16);
