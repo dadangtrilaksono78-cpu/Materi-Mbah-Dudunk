@@ -20,13 +20,13 @@
         }
 
         button {
-    padding: 12px;
-    width: 100%;
-    background-color: #4CAF50; /* hijau */
-    color: white;
-    border: none;
-    border-radius: 5px;
-    font-weight: bold;
+            padding: 12px;
+            width: 100%;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-weight: bold;
         }
     </style>
 </head>
@@ -43,10 +43,10 @@ membelokkan roda, biasanya roda depan, sesuai keinginan pengemudi.
 
 <button onclick="download()">DOWNLOAD MATERI</button>
 
-<script>
-<script>
+<!-- jsPDF -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
+<!-- Script utama -->
 <script>
 async function download() {
     const { jsPDF } = window.jspdf;
@@ -56,7 +56,6 @@ async function download() {
     let judul = document.querySelector("h2").innerText;
     let jawaban = document.querySelector(".input-inline").innerText;
 
-    // isi PDF
     doc.setFontSize(14);
     doc.text(judul, 10, 20);
 
@@ -72,9 +71,6 @@ async function download() {
     doc.save("hasil.pdf");
 }
 </script>
-</script>
 
-</script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </body>
 </html>
