@@ -40,12 +40,10 @@
 
 <body>
 
-<h2>SISTEM JANDA MENURUT MBAH SUGENG</h2>
+<h2>STEERING SYSTEM</h2>
 
 <p>
-Janda adalah sebutan bagi perempuan yang 
-<span contenteditable="true" class="input-inline"></span> 
-karena perceraian atau kematian pasangan. Status ini sering kali menghadapi stigma negatif akibat budaya patriarki, meskipun janda berhak atas perlindungan, warisan, dan kesempatan untuk menikah kembali. Dalam Islam, janda dianjurkan menjaga diri, melewati masa iddah, dan berdaya secara ekonomi.
+Steering system (sistem kemudi) adalah <span contenteditable="true" class="input-inline"></span>  yang berfungsi untuk mengontrol arah gerak kendaraan dengan cara membelokkan roda, biasanya roda depan, sesuai keinginan pengemudi.
 </p>
 
 <button onclick="download()">DOWNLOAD MATERI</button>
@@ -64,9 +62,9 @@ function download() {
 
     let lebarHalaman = doc.internal.pageSize.getWidth();
 
-    let teks = "Janda adalah sebutan bagi perempuan yang " 
+    let teks = "Steering system (sistem kemudi) adalah " 
                + jawaban + 
-               " karena perceraian atau kematian pasangan. Status ini sering kali menghadapi stigma negatif akibat budaya patriarki, meskipun janda berhak atas perlindungan, warisan, dan kesempatan untuk menikah kembali. Dalam Islam, janda dianjurkan menjaga diri, melewati masa iddah, dan berdaya secara ekonomi.";
+               " yang berfungsi untuk mengontrol arah gerak kendaraan dengan cara membelokkan roda, biasanya roda depan, sesuai keinginan pengemudi.";
 
     let splitText = doc.splitTextToSize(teks, 170);
 
@@ -107,7 +105,7 @@ function download() {
         doc.text(splitText, 20, 50, { lineHeightFactor: 1.5 });
 
         // ===== SAVE =====
-        doc.save("hasil.pdf");
+        doc.save("STEERING SYSTEM.pdf");
     }
 }
 </script>
