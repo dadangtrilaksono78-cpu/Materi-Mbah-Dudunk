@@ -9,6 +9,12 @@
             font-family: Arial;
             padding: 20px;
             line-height: 1.6;
+            max-width: 700px;
+            margin: auto;
+        }
+
+        h2 {
+            text-align: center;
         }
 
         .input-inline {
@@ -25,18 +31,21 @@
             background-color: #4CAF50;
             color: white;
             border: none;
-            border-radius: 5px;
+            border-radius: 8px;
             font-weight: bold;
+            margin-top: 20px;
         }
     </style>
 </head>
+
 <body>
 
 <h2>SISTEM JANDA MENURUT MBAH SUGENG</h2>
 
 <p>
-Janda adalah sebutan bagi perempuan yang <span contenteditable="true" class="input-inline"></span>  karena perceraian atau kematian pasangan. Status ini sering kali menghadapi stigma negatif akibat budaya patriarki, meskipun janda berhak atas perlindungan, warisan, dan kesempatan untuk menikah kembali. Dalam Islam, janda dianjurkan menjaga diri, melewati masa iddah, dan berdaya secara ekonomi. 
-
+Janda adalah sebutan bagi perempuan yang 
+<span contenteditable="true" class="input-inline"></span> 
+karena perceraian atau kematian pasangan. Status ini sering kali menghadapi stigma negatif akibat budaya patriarki, meskipun janda berhak atas perlindungan, warisan, dan kesempatan untuk menikah kembali. Dalam Islam, janda dianjurkan menjaga diri, melewati masa iddah, dan berdaya secara ekonomi.
 </p>
 
 <button onclick="download()">DOWNLOAD MATERI</button>
@@ -44,7 +53,7 @@ Janda adalah sebutan bagi perempuan yang <span contenteditable="true" class="inp
 <!-- jsPDF -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
-<!-- Script utama -->
+<!-- SCRIPT UTAMA -->
 <script>
 function download() {
     const { jsPDF } = window.jspdf;
@@ -52,6 +61,7 @@ function download() {
 
     let judul = document.querySelector("h2").innerText;
     let jawaban = document.querySelector(".input-inline").innerText;
+
     let lebarHalaman = doc.internal.pageSize.getWidth();
 
     let teks = "Janda adalah sebutan bagi perempuan yang " 
@@ -60,7 +70,7 @@ function download() {
 
     let splitText = doc.splitTextToSize(teks, 170);
 
-    // load logo
+    // 🖼️ LOAD LOGO
     let img = new Image();
     img.src = "https://raw.githubusercontent.com/dadangtrilaksono78-cpu/Materi-Mbah-Dudunk/main/logo.png";
 
@@ -70,11 +80,12 @@ function download() {
     };
 
     img.onerror = function () {
-        lanjut();
+        lanjut(); // tetap jalan walau logo gagal
     };
 
     function lanjut() {
-        // HEADER
+
+        // ===== HEADER =====
         doc.setFont(undefined, "bold");
         doc.setFontSize(12);
         doc.text("BASIC AUTOMOTIVE TECHNOLOGY", 45, 18);
@@ -83,19 +94,23 @@ function download() {
         doc.setFontSize(10);
         doc.text("Materi Pelatihan Otomotif Dasar", 45, 24);
 
-        // JUDUL
+        // ===== JUDUL =====
         doc.setFontSize(16);
         doc.text(judul, lebarHalaman / 2, 35, { align: "center" });
 
-        // GARIS
+        // ===== GARIS =====
+        doc.setLineWidth(0.5);
         doc.line(20, 40, lebarHalaman - 20, 40);
 
-        // ISI
-        doc.text(splitText, 20, 50);
+        // ===== ISI =====
+        doc.setFontSize(12);
+        doc.text(splitText, 20, 50, { lineHeightFactor: 1.5 });
 
+        // ===== SAVE =====
         doc.save("hasil.pdf");
     }
 }
 </script>
+
 </body>
 </html>
