@@ -32,11 +32,7 @@
 </head>
 
 <body>
-// URL logo
-let logo = "https://raw.githubusercontent.com/dadangtrilaksono78-cpu/Materi-Mbah-Dudunk/main/logo.png";
 
-// tambahkan logo (x, y, width, height)
-doc.addImage(logo, "PNG", 20, 10, 20, 20);
 <h2>STEERING SYSTEM</h2>
 
 <p>
@@ -60,7 +56,9 @@ function download() {
 
     const { jsPDF } = window.jspdf;
     let doc = new jsPDF();
-
+    // 🖼️ LOGO DI SINI (BENAR)
+    let logo = "https://raw.githubusercontent.com/dadangtrilaksono78-cpu/Materi-Mbah-Dudunk/main/logo.png";
+    doc.addImage(logo, "PNG", 20, 10, 20, 20);
     let judul = document.querySelector("h2").innerText;
     let jawaban = document.querySelector(".input-inline").innerText;
 
