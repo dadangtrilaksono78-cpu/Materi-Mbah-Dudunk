@@ -3,7 +3,6 @@
 <head>
     <title>Latihan Materi</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
     <style>
         body {
             font-family: Arial;
@@ -12,11 +11,9 @@
             max-width: 700px;
             margin: auto;
         }
-
         h2 {
             text-align: center;
         }
-
         .input-inline {
             display: inline-block;
             border-bottom: 1px dotted black;
@@ -24,7 +21,6 @@
             padding: 2px 5px;
             outline: none;
         }
-
         button {
             padding: 12px;
             width: 100%;
@@ -35,13 +31,17 @@
             font-weight: bold;
             margin-top: 20px;
         }
+button:not([onclick="download()"]) {
+    width: auto;
+    background-color: #555;
+    margin-top: 5px;
+    display: inline-block;
+    margin-right: 5px;
+}
     </style>
 </head>
-
 <body>
-
 <h2>STEERING SYSTEM</h2>
-
 <p>
 Steering system (sistem kemudi) adalah <span contenteditable="true" class="input-inline"></span>  yang berfungsi untuk mengontrol arah gerak kendaraan dengan cara membelokkan roda, biasanya roda depan, sesuai keinginan pengemudi.
 Fungsi utama steering system:
@@ -55,67 +55,63 @@ Fungsi utama steering system:
     style="border-radius:10px"
     crossorigin="anonymous">
 </p>
-
+<p><b>Pilih Warna Teks:</b></p>
+<button onclick="warna('red')">Merah</button>
+<button onclick="warna('blue')">Biru</button>
+<button onclick="warna('green')">Hijau</button>
+<input type="color" onchange="warna(this.value)">
 <button onclick="download()">DOWNLOAD MATERI</button>
-
 <!-- jsPDF -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-
 <!-- SCRIPT UTAMA -->
 <script>
+function warna(color) {
+    let selection = window.getSelection();
+    if (!selection.rangeCount) return;
+    let range = selection.getRangeAt(0);
+    let parent = range.commonAncestorContainer;
+    if (!document.querySelector(".input-inline").contains(parent)) {
+        alert("Blok teks di area jawaban dulu!");
+        return;
+    }
+    let span = document.createElement("span");
+    span.style.color = color;
+    span.appendChild(range.extractContents());
+    range.insertNode(span);
+}
 function download() {
     const { jsPDF } = window.jspdf;
     let doc = new jsPDF();
-
     let judul = document.querySelector("h2").innerText;
     let jawaban = document.querySelector(".input-inline").innerText;
-
     let lebarHalaman = doc.internal.pageSize.getWidth();
-
     let teks = "Steering system (sistem kemudi) adalah " 
                + jawaban + 
                " yang berfungsi untuk mengontrol arah gerak kendaraan dengan cara membelokkan roda, biasanya roda depan, sesuai keinginan pengemudi.";
-
     let splitText = doc.splitTextToSize(teks, 170);
-
-    // 🖼️ LOAD LOGO
     let img = new Image();
     img.src = "https://raw.githubusercontent.com/dadangtrilaksono78-cpu/Materi-Mbah-Dudunk/main/logo.png";
-
     img.onload = function () {
         doc.addImage(img, "PNG", 20, 10, 20, 20);
         lanjut();
     };
-
     img.onerror = function () {
-        lanjut(); // tetap jalan walau logo gagal
+        lanjut();
     };
-
     function lanjut() {
-
-        // ===== HEADER =====
         doc.setFont(undefined, "bold");
         doc.setFontSize(12);
         doc.text("BASIC AUTOMOTIVE TECHNOLOGY", 45, 18);
-
         doc.setFont(undefined, "normal");
         doc.setFontSize(10);
         doc.text("Materi Pelatihan Otomotif Dasar", 45, 24);
-
-        // ===== JUDUL =====
         doc.setFontSize(16);
         doc.text(judul, lebarHalaman / 2, 35, { align: "center" });
-
-        // ===== GARIS =====
         doc.setLineWidth(0.5);
         doc.line(20, 40, lebarHalaman - 20, 40);
-
-        // ===== ISI =====
         doc.setFontSize(12);
         doc.text(splitText, 20, 50, { lineHeightFactor: 1.5 });
-// ===== GAMBAR =====
-let gambar = document.getElementById("gambarMateri");
-
+        let gambar = document.getElementById("gambarMateri");
 if (gambar) {
     let canvas = document.createElement("canvas");
     let ctx = canvas.getContext("2d");
@@ -127,13 +123,23 @@ if (gambar) {
 
     let imgData = canvas.toDataURL("image/png");
 
-    doc.addImage(imgData, "PNG", 20, 80, 170, 90);
+    let maxLebar = 170;
+    let maxTinggi = 120;
+
+    let ratio = gambar.naturalHeight / gambar.naturalWidth;
+    let lebar = maxLebar;
+    let tinggi = lebar * ratio;
+
+    if (tinggi > maxTinggi) {
+        tinggi = maxTinggi;
+        lebar = tinggi / ratio;
+    }
+
+    doc.addImage(imgData, "PNG", 20, 90, lebar, tinggi);
 }
-        // ===== SAVE =====
-        doc.save("STEERING SYSTEM.pdf");
+        doc.save("STEERING SYSTEM.pdf"); 
     }
 }
 </script>
-
 </body>
 </html>
