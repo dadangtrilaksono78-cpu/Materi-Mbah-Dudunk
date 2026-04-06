@@ -69,9 +69,9 @@ function download() {
                + jawaban + 
                " membelokkan roda, biasanya roda depan, sesuai keinginan pengemudi.";
 
-    let splitText = doc.splitTextToSize(teks, 180);
+    let splitText = doc.splitTextToSize(teks, 150);
 
-    doc.text(splitText, 10, 40);
+    doc.text(splitText, 10, 40, { lineHeightFactor: 1.5 });
 
     doc.save("hasil.pdf");
 }
