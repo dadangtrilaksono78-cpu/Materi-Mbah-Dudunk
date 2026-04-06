@@ -34,8 +34,7 @@
 <body>
 
 <h2>STEERING SYSTEM</h2>
-doc.setLineWidth(0.5);
-doc.line(20, 40, lebarHalaman - 20, 40);
+
 <p>
 Steering system (sistem kemudi) adalah sistem pada kendaraan yang berfungsi untuk mengontrol 
 <span contenteditable="true" class="input-inline"></span> 
@@ -49,6 +48,7 @@ membelokkan roda, biasanya roda depan, sesuai keinginan pengemudi.
 
 <!-- Script utama -->
 <script>
+<script>
 function download() {
     if (!window.jspdf) {
         alert("Library PDF belum siap, coba refresh halaman");
@@ -57,32 +57,38 @@ function download() {
 
     const { jsPDF } = window.jspdf;
     let doc = new jsPDF();
-    // 🖼️ LOGO DI SINI (BENAR)
-    let logo = "https://raw.githubusercontent.com/dadangtrilaksono78-cpu/Materi-Mbah-Dudunk/main/logo.png";
-    doc.addImage(logo, "PNG", 20, 10, 20, 20);
+
     let judul = document.querySelector("h2").innerText;
     let jawaban = document.querySelector(".input-inline").innerText;
 
-    doc.setFontSize(14);
     let lebarHalaman = doc.internal.pageSize.getWidth();
-doc.setFontSize(16);
-doc.text(judul, lebarHalaman / 2, 35, { align: "center" });
 
+    // 🖼️ LOGO
+    let logo = "https://raw.githubusercontent.com/dadangtrilaksono78-cpu/Materi-Mbah-Dudunk/main/logo.png";
+    doc.addImage(logo, "PNG", 20, 10, 20, 20);
+
+    // 📝 JUDUL (DITURUNKAN)
+    doc.setFontSize(16);
+    doc.text(judul, lebarHalaman / 2, 35, { align: "center" });
+
+    // 📏 GARIS HEADER
+    doc.setLineWidth(0.5);
+    doc.line(20, 40, lebarHalaman - 20, 40);
+
+    // ✍️ ISI
     doc.setFontSize(12);
 
     let teks = "Steering system (sistem kemudi) adalah sistem pada kendaraan yang berfungsi untuk mengontrol " 
                + jawaban + 
                " membelokkan roda, biasanya roda depan, sesuai keinginan pengemudi.";
 
-let marginKiri = 20;
-let marginKanan = 20;
+    let marginKiri = 20;
+    let marginKanan = 20;
+    let lebarText = lebarHalaman - marginKiri - marginKanan;
 
-let lebarHalaman = doc.internal.pageSize.getWidth();
-let lebarText = lebarHalaman - marginKiri - marginKanan;
+    let splitText = doc.splitTextToSize(teks, lebarText);
 
-let splitText = doc.splitTextToSize(teks, lebarText);
-
-doc.text(splitText, marginKiri, 50, { lineHeightFactor: 1.5 });
+    doc.text(splitText, marginKiri, 50, { lineHeightFactor: 1.5 });
 
     doc.save("hasil.pdf");
 }
