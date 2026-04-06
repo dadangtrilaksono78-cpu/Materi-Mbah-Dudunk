@@ -48,7 +48,8 @@ Fungsi utama steering system:
 -Mengubah arah kendaraan
 -Menjaga kestabilan saat berkendara
 -Memberi kontrol yang nyaman dan responsif ke pengemudi
-//DISINI TAMBAHKAN GAMBAR...
+<br><br>
+<img id="gambarMateri" src="https://upload.wikimedia.org/wikipedia/commons/3/3a/Car_steering_system_diagram.png" width="100%" style="border-radius:10px;">
 </p>
 
 <button onclick="download()">DOWNLOAD MATERI</button>
@@ -108,7 +109,22 @@ function download() {
         // ===== ISI =====
         doc.setFontSize(12);
         doc.text(splitText, 20, 50, { lineHeightFactor: 1.5 });
+// ===== GAMBAR =====
+let gambar = document.getElementById("gambarMateri");
 
+if (gambar) {
+    let canvas = document.createElement("canvas");
+    let ctx = canvas.getContext("2d");
+
+    canvas.width = gambar.naturalWidth;
+    canvas.height = gambar.naturalHeight;
+
+    ctx.drawImage(gambar, 0, 0);
+
+    let imgData = canvas.toDataURL("image/png");
+
+    doc.addImage(imgData, "PNG", 20, 80, 170, 90);
+}
         // ===== SAVE =====
         doc.save("STEERING SYSTEM.pdf");
     }
