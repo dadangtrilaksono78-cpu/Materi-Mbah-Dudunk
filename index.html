@@ -56,11 +56,11 @@ function download() {
 
     let teks = "Janda adalah sebutan bagi perempuan yang " 
                + jawaban + 
-               " karena perceraian atau kematian pasangan. Status ini sering kali menghadapi stigma negatif akibat budaya patriarki, meskipun janda berhak atas perlindungan, warisan, dan kesempatan untuk menikah kembali. Dalam Islam, janda dianjurkan menjaga diri, melewati masa iddah, dan berdaya secara ekonomi. 
+               " karena perceraian atau kematian pasangan. Status ini sering kali menghadapi stigma negatif akibat budaya patriarki, meskipun janda berhak atas perlindungan, warisan, dan kesempatan untuk menikah kembali. Dalam Islam, janda dianjurkan menjaga diri, melewati masa iddah, dan berdaya secara ekonomi.";
 
     let splitText = doc.splitTextToSize(teks, 170);
 
-    // 🖼️ LOAD LOGO (VERSI RINGAN)
+    // load logo
     let img = new Image();
     img.src = "https://raw.githubusercontent.com/dadangtrilaksono78-cpu/Materi-Mbah-Dudunk/main/logo.png";
 
@@ -68,30 +68,34 @@ function download() {
         doc.addImage(img, "PNG", 20, 10, 20, 20);
         lanjut();
     };
-doc.addImage(img, "PNG", 20, 10, 20, 20);
 
-// teks samping logo
-doc.setFont(undefined, "bold");
-doc.setFontSize(12);
-doc.text("BASIC AUTOMOTIVE TECHNOLOGY", 45, 18);
-
-doc.setFont(undefined, "normal");
-doc.setFontSize(10);
-doc.text("Materi Pelatihan Otomotif Dasar", 45, 24);
     img.onerror = function () {
-        lanjut(); // tetap jalan walau logo gagal
+        lanjut();
     };
 
     function lanjut() {
+        // HEADER
+        doc.setFont(undefined, "bold");
+        doc.setFontSize(12);
+        doc.text("BASIC AUTOMOTIVE TECHNOLOGY", 45, 18);
+
+        doc.setFont(undefined, "normal");
+        doc.setFontSize(10);
+        doc.text("Materi Pelatihan Otomotif Dasar", 45, 24);
+
+        // JUDUL
         doc.setFontSize(16);
         doc.text(judul, lebarHalaman / 2, 35, { align: "center" });
 
+        // GARIS
         doc.line(20, 40, lebarHalaman - 20, 40);
 
+        // ISI
         doc.text(splitText, 20, 50);
 
         doc.save("hasil.pdf");
     }
+}
 </script>
 </body>
 </html>
