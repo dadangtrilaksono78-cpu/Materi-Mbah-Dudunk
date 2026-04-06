@@ -49,32 +49,12 @@ membelokkan roda, biasanya roda depan, sesuai keinginan pengemudi.
 <!-- Script utama -->
 <script>
 function download() {
-    if (!window.jspdf) {
-        alert("Library PDF belum siap, coba refresh halaman");
-        return;
-    }
-
     const { jsPDF } = window.jspdf;
     let doc = new jsPDF();
 
     let judul = document.querySelector("h2").innerText;
     let jawaban = document.querySelector(".input-inline").innerText;
-
     let lebarHalaman = doc.internal.pageSize.getWidth();
-
-// LOGO NONAKTIF SEMENTARA
-// doc.addImage(...)
-
-    // 📝 JUDUL (DITURUNKAN)
-    doc.setFontSize(16);
-    doc.text(judul, lebarHalaman / 2, 35, { align: "center" });
-
-    // 📏 GARIS HEADER
-    doc.setLineWidth(0.5);
-    doc.line(20, 40, lebarHalaman - 20, 40);
-
-    // ✍️ ISI
-    doc.setFontSize(12);
 
     let teks = "Steering system (sistem kemudi) adalah sistem pada kendaraan yang berfungsi untuk mengontrol " 
                + jawaban + 
@@ -86,9 +66,31 @@ function download() {
 
     let splitText = doc.splitTextToSize(teks, lebarText);
 
-    doc.text(splitText, marginKiri, 50, { lineHeightFactor: 1.5 });
+    // LOAD LOGO
+    let img = new Image();
+    img.src = "https://raw.githubusercontent.com/dadangtrilaksono78-cpu/Materi-Mbah-Dudunk/main/logo.png";
 
-    doc.save("hasil.pdf");
+    img.onload = function () {
+        doc.addImage(img, "PNG", 20, 10, 20, 20);
+        lanjut();
+    };
+
+    img.onerror = function () {
+        lanjut(); // tetap jalan walau logo gagal
+    };
+
+    function lanjut() {
+        doc.setFontSize(16);
+        doc.text(judul, lebarHalaman / 2, 35, { align: "center" });
+
+        doc.setLineWidth(0.5);
+        doc.line(20, 40, lebarHalaman - 20, 40);
+
+        doc.setFontSize(12);
+        doc.text(splitText, marginKiri, 50, { lineHeightFactor: 1.5 });
+
+        doc.save("hasil.pdf");
+    }
 }
 </script>
 
