@@ -60,13 +60,9 @@ function download() {
                + jawaban + 
                " membelokkan roda, biasanya roda depan, sesuai keinginan pengemudi.";
 
-    let marginKiri = 20;
-    let marginKanan = 20;
-    let lebarText = lebarHalaman - marginKiri - marginKanan;
+    let splitText = doc.splitTextToSize(teks, 170);
 
-    let splitText = doc.splitTextToSize(teks, lebarText);
-
-    // LOAD LOGO
+    // 🖼️ LOAD LOGO (VERSI RINGAN)
     let img = new Image();
     img.src = "https://raw.githubusercontent.com/dadangtrilaksono78-cpu/Materi-Mbah-Dudunk/main/logo.png";
 
@@ -83,11 +79,9 @@ function download() {
         doc.setFontSize(16);
         doc.text(judul, lebarHalaman / 2, 35, { align: "center" });
 
-        doc.setLineWidth(0.5);
         doc.line(20, 40, lebarHalaman - 20, 40);
 
-        doc.setFontSize(12);
-        doc.text(splitText, marginKiri, 50, { lineHeightFactor: 1.5 });
+        doc.text(splitText, 20, 50);
 
         doc.save("hasil.pdf");
     }
