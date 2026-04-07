@@ -68,41 +68,12 @@ yang berfungsi untuk mengontrol arah gerak kendaraan dengan cara membelokkan rod
 src="https://raw.githubusercontent.com/dadangtrilaksono78-cpu/Materi-Mbah-Dudunk/main/Steering01.png"
 width="100%" crossorigin="anonymous">
 
-<p><b>Pilih Warna:</b></p>
-
-<button onclick="warna('red')" style="background:red">Red</button>
-<button onclick="warna('blue')" style="background:blue">Blue</button>
-<button onclick="warna('black')" style="background:black">Black</button>
-<input type="color" onchange="warna(this.value)">
-
 <button onclick="download()">DOWNLOAD</button>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
 <script>
-let warnaAktif = "black";
 const input = document.querySelector(".input-inline");
-
-function warna(color){
-    warnaAktif = color;
-}
-
-input.addEventListener("input", function(){
-    this.style.color = warnaAktif;
-});
-
-function hexToRgb(hex){
-    if(hex === "red") return [255,0,0];
-    if(hex === "blue") return [0,0,255];
-    if(hex === "black") return [0,0,0];
-
-    hex = hex.replace("#","");
-    return [
-        parseInt(hex.substring(0,2),16),
-        parseInt(hex.substring(2,4),16),
-        parseInt(hex.substring(4,6),16)
-    ];
-}
 
 function download(){
     const { jsPDF } = window.jspdf;
@@ -113,8 +84,6 @@ function download(){
     let jabatan = document.getElementById("jabatan").value || "-";
 
     let jawaban = input.innerText || "-";
-    let warnaText = input.style.color || "black";
-    let rgb = hexToRgb(warnaText);
 
     let teksAwal = "Steering system (sistem kemudi) adalah ";
     let teksAkhir = " yang berfungsi untuk mengontrol arah gerak kendaraan dengan cara membelokkan roda.";
@@ -122,6 +91,9 @@ function download(){
     function buatPDF(){
 
         let lebar = doc.internal.pageSize.getWidth();
+
+        // ===== LOGO =====
+        doc.addImage(logo, "PNG", 20, 10, 20, 20);
 
         // ===== HEADER =====
         doc.setFont(undefined, "bold");
@@ -135,7 +107,7 @@ function download(){
         doc.setFontSize(16);
         doc.text("STEERING SYSTEM", lebar/2, 35, {align:"center"});
 
-        // ===== IDENTITAS KANAN =====
+        // ===== IDENTITAS =====
         doc.setFontSize(10);
         doc.text(`Nama : ${nama}`, lebar - 20, 15, {align:"right"});
         doc.text(`NRP : ${nrp}`, lebar - 20, 21, {align:"right"});
@@ -143,37 +115,16 @@ function download(){
 
         doc.line(20, 40, lebar-20, 40);
 
-        // ===== TEKS =====
+        // ===== PARAGRAF JUSTIFY =====
         let fullText = teksAwal + jawaban + teksAkhir;
-        let lines = doc.splitTextToSize(fullText, 170);
 
-        let y = 50;
         doc.setFontSize(12);
+        doc.setTextColor(0,0,0);
 
-        lines.forEach(line => {
-            let x = 20;
-            let index = line.indexOf(jawaban);
-
-            if(index !== -1){
-                let sebelum = line.substring(0, index);
-                let sesudah = line.substring(index + jawaban.length);
-
-                doc.setTextColor(0,0,0);
-                doc.text(sebelum, x, y);
-                x += doc.getTextWidth(sebelum);
-
-                doc.setTextColor(rgb[0], rgb[1], rgb[2]);
-                doc.text(jawaban, x, y);
-                x += doc.getTextWidth(jawaban);
-
-                doc.setTextColor(0,0,0);
-                doc.text(sesudah, x, y);
-            } else {
-                doc.setTextColor(0,0,0);
-                doc.text(line, x, y);
-            }
-
-            y += 7;
+        doc.text(fullText, 20, 50, {
+            maxWidth: 170,
+            align: "justify",
+            lineHeightFactor: 1.5
         });
 
         // ===== GAMBAR =====
@@ -190,18 +141,17 @@ function download(){
 
             let imgData = canvas.toDataURL("image/png");
 
-            doc.addImage(imgData, "PNG", 20, y + 10, 170, 90);
+            doc.addImage(imgData, "PNG", 20, 90, 170, 90);
         } catch(e){}
 
         doc.save("STEERING SYSTEM.pdf");
     }
 
-    // ===== LOGO =====
+    // ===== LOAD LOGO =====
     let logo = new Image();
     logo.src = "https://raw.githubusercontent.com/dadangtrilaksono78-cpu/Materi-Mbah-Dudunk/main/logo.png";
 
     logo.onload = function(){
-        doc.addImage(logo, "PNG", 20, 10, 20, 20);
         buatPDF();
     };
 
