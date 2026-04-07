@@ -79,20 +79,25 @@ inputs.forEach(input => {
 });
 
 // Konversi hex ke RGB untuk jsPDF
-function hexToRgb(hex){
-    if(!hex) return [0,0,0];
+function hexToRgb(value){
+    if(!value) return [0,0,0];
 
-    hex = hex.replace(/^#/, ''); // hapus #
-    if(hex.length === 3){ // support short hex, misal #f00
-        hex = hex.split('').map(c => c + c).join('');
+    // Jika format rgb(r,g,b)
+    if(value.startsWith("rgb")){
+        let nums = value.match(/\d+/g);
+        return [parseInt(nums[0]), parseInt(nums[1]), parseInt(nums[2])];
     }
 
-    const r = parseInt(hex.substring(0,2), 16);
-    const g = parseInt(hex.substring(2,4), 16);
-    const b = parseInt(hex.substring(4,6), 16);
+    // Jika format hex (#rrggbb)
+    value = value.replace(/^#/, '');
+    if(value.length === 3){ // support short hex, misal #f00
+        value = value.split('').map(c => c + c).join('');
+    }
+    const r = parseInt(value.substring(0,2), 16);
+    const g = parseInt(value.substring(2,4), 16);
+    const b = parseInt(value.substring(4,6), 16);
     return [r, g, b];
 }
-
 // Fungsi download PDF
 function download(){
     const { jsPDF } = window.jspdf;
