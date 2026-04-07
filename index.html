@@ -176,7 +176,7 @@ function download(){
     logo.src = "https://raw.githubusercontent.com/dadangtrilaksono78-cpu/Materi-Mbah-Dudunk/main/logo.png";
 
     logo.onload = function(){
-        doc.addImage(logo, "PNG", 20, 10, 20, 20);
+        doc.addImage(logo, "PNG", 20, 10, 20, 20, undefined, "FAST");
         buatPDF();
     };
 
