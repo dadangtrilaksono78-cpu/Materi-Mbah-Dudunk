@@ -97,7 +97,7 @@ function download(){
     const { jsPDF } = window.jspdf;
     let doc = new jsPDF();
 
-    // Ambil teks dan warna dari kedua span
+    // Ambil semua teks & warna dari span
     let jawabanArray = [];
     inputs.forEach(inp => {
         jawabanArray.push({
@@ -158,7 +158,6 @@ function download(){
         try {
             let canvas = document.createElement("canvas");
             let ctx = canvas.getContext("2d");
-
             canvas.width = gambar.naturalWidth;
             canvas.height = gambar.naturalHeight;
             ctx.drawImage(gambar, 0, 0);
