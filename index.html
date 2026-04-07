@@ -92,62 +92,66 @@ function download(){
     let doc = new jsPDF();
 
     let jawaban = input.innerText || "-";
-
     let warnaText = input.style.color || "black";
     let rgb = hexToRgb(warnaText);
 
     let teksAwal = "Steering system (sistem kemudi) adalah ";
     let teksAkhir = " yang berfungsi untuk mengontrol arah gerak kendaraan dengan cara membelokkan roda.";
 
-    let fullText = teksAwal + jawaban + teksAkhir;
+    function buatPDF(){
 
-    let lines = doc.splitTextToSize(fullText, 170);
+        let lebar = doc.internal.pageSize.getWidth();
 
-    let y = 50;
-    doc.setFontSize(12);
+        // ===== HEADER =====
+        doc.setFont(undefined, "bold");
+        doc.setFontSize(12);
+        doc.text("BASIC AUTOMOTIVE TECHNOLOGY", 45, 18);
 
-    lines.forEach(line => {
-        let x = 20;
-        let index = line.indexOf(jawaban);
+        doc.setFont(undefined, "normal");
+        doc.setFontSize(10);
+        doc.text("Materi Pelatihan Otomotif Dasar", 45, 24);
 
-        if(index !== -1){
-            let sebelum = line.substring(0, index);
-            let sesudah = line.substring(index + jawaban.length);
+        doc.setFontSize(16);
+        doc.text("STEERING SYSTEM", lebar/2, 35, {align:"center"});
 
-            doc.setTextColor(0,0,0);
-            doc.text(sebelum, x, y);
-            x += doc.getTextWidth(sebelum);
+        doc.line(20, 40, lebar-20, 40);
 
-            doc.setTextColor(rgb[0], rgb[1], rgb[2]);
-            doc.text(jawaban, x, y);
-            x += doc.getTextWidth(jawaban);
+        // ===== TEKS =====
+        let fullText = teksAwal + jawaban + teksAkhir;
+        let lines = doc.splitTextToSize(fullText, 170);
 
-            doc.setTextColor(0,0,0);
-            doc.text(sesudah, x, y);
+        let y = 50;
+        doc.setFontSize(12);
 
-        } else {
-            doc.setTextColor(0,0,0);
-            doc.text(line, x, y);
-        }
+        lines.forEach(line => {
+            let x = 20;
+            let index = line.indexOf(jawaban);
 
-        y += 7;
-    });
+            if(index !== -1){
+                let sebelum = line.substring(0, index);
+                let sesudah = line.substring(index + jawaban.length);
 
-    // ===== FIX BAGIAN GAMBAR =====
-    let gambar = document.getElementById("gambarMateri");
+                doc.setTextColor(0,0,0);
+                doc.text(sebelum, x, y);
+                x += doc.getTextWidth(sebelum);
 
-    function selesai(){
-        doc.save("STEERING SYSTEM.pdf");
-    }
+                doc.setTextColor(rgb[0], rgb[1], rgb[2]);
+                doc.text(jawaban, x, y);
+                x += doc.getTextWidth(jawaban);
 
-    if (gambar.complete && gambar.naturalWidth !== 0) {
-        prosesGambar();
-    } else {
-        gambar.onload = prosesGambar;
-        gambar.onerror = selesai;
-    }
+                doc.setTextColor(0,0,0);
+                doc.text(sesudah, x, y);
+            } else {
+                doc.setTextColor(0,0,0);
+                doc.text(line, x, y);
+            }
 
-    function prosesGambar(){
+            y += 7;
+        });
+
+        // ===== GAMBAR MATERI =====
+        let gambar = document.getElementById("gambarMateri");
+
         try {
             let canvas = document.createElement("canvas");
             let ctx = canvas.getContext("2d");
@@ -160,12 +164,25 @@ function download(){
             let imgData = canvas.toDataURL("image/png");
 
             doc.addImage(imgData, "PNG", 20, y + 10, 170, 90);
-        } catch (e) {
-            console.log("Gagal load gambar:", e);
+        } catch(e){
+            console.log("gambar gagal");
         }
 
-        selesai();
+        doc.save("STEERING SYSTEM.pdf");
     }
+
+    // ===== LOGO =====
+    let logo = new Image();
+    logo.src = "https://raw.githubusercontent.com/dadangtrilaksono78-cpu/Materi-Mbah-Dudunk/main/logo.png";
+
+    logo.onload = function(){
+        doc.addImage(logo, "PNG", 20, 10, 20, 20);
+        buatPDF();
+    };
+
+    logo.onerror = function(){
+        buatPDF();
+    };
 }
 </script>
 
