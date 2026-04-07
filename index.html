@@ -60,13 +60,13 @@ width="100%" crossorigin="anonymous">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
 <script>
-let warnaAktif = "#000000"; // default warna hitam
+let warnaAktif = "#000000"; // warna default
 const inputs = document.querySelectorAll(".input-inline");
 
-// ===== Set warna default inline agar selalu terbaca oleh jsPDF =====
+// ===== Set warna default inline agar selalu terbaca =====
 inputs.forEach(input => input.style.color = warnaAktif);
 
-// Fungsi pilih warna
+// Fungsi untuk memilih warna
 function warna(color){
     warnaAktif = color;
     inputs.forEach(input => input.style.color = warnaAktif);
@@ -79,7 +79,7 @@ inputs.forEach(input => {
     });
 });
 
-// Fungsi konversi hex/rgb ke array RGB
+// Konversi hex/rgb ke array RGB
 function hexToRgb(value){
     if(!value) return [0,0,0];
     if(value.startsWith("rgb")){
@@ -87,12 +87,22 @@ function hexToRgb(value){
         return [parseInt(nums[0]), parseInt(nums[1]), parseInt(nums[2])];
     }
     value = value.replace(/^#/, '');
-    if(value.length === 3) value = value.split('').map(c => c+c).join('');
+    if(value.length === 3) value = value.split('').map(c=>c+c).join('');
     return [
         parseInt(value.substring(0,2),16),
         parseInt(value.substring(2,4),16),
         parseInt(value.substring(4,6),16)
     ];
+}
+
+// Fungsi untuk menulis teks panjang dengan word wrap
+function tulisTeksWrap(doc, teks, x, y, maxWidth, rgb) {
+    doc.setTextColor(...rgb);
+    const lines = doc.splitTextToSize(teks, maxWidth);
+    lines.forEach((line, index) => {
+        doc.text(line, x, y + (index*7)); // 7 = line height
+    });
+    return y + (lines.length*7); // posisi Y setelah teks
 }
 
 // Fungsi download PDF
@@ -104,55 +114,47 @@ function download(){
     let jawabanArray = [];
     inputs.forEach(inp => {
         let teks = inp.innerText.trim() || "-";
-        // pastikan style.color ada, jika kosong set warnaAktif
         if(!inp.style.color) inp.style.color = warnaAktif;
         jawabanArray.push({ teks: teks, rgb: hexToRgb(inp.style.color) });
     });
 
     function buatPDF(){
-        let lebar = doc.internal.pageSize.getWidth();
+        const lebar = doc.internal.pageSize.getWidth();
+        const margin = 20;
+        let y = 50;
 
         // HEADER
         doc.setFont(undefined, "bold");
         doc.setFontSize(12);
         doc.text("BASIC AUTOMOTIVE TECHNOLOGY", 45, 18);
-
         doc.setFont(undefined, "normal");
         doc.setFontSize(10);
         doc.text("Materi Pelatihan Otomotif Dasar", 45, 24);
-
         doc.setFontSize(16);
         doc.text("STEERING SYSTEM", lebar/2, 35, {align:"center"});
-
-        doc.line(20, 40, lebar-20, 40);
+        doc.line(margin, 40, lebar - margin, 40);
 
         // TEKS
-        let y = 50;
         doc.setFontSize(12);
-
-        let teks1 = "Steering system (sistem kemudi) adalah ";
+        const teks1 = "Steering system (sistem kemudi) adalah ";
         doc.setTextColor(0,0,0);
-        doc.text(teks1, 20, y);
+        y = tulisTeksWrap(doc, teks1, margin, y, lebar - 2*margin, [0,0,0]);
 
-        let x = 20 + doc.getTextWidth(teks1);
-        doc.setTextColor(...jawabanArray[0].rgb);
-        doc.text(jawabanArray[0].teks, x, y);
+        // Jawaban pertama
+        y = tulisTeksWrap(doc, jawabanArray[0].teks, margin + doc.getTextWidth(teks1), y - 7, lebar - 2*margin, jawabanArray[0].rgb);
 
-        let teks2 = " yang berfungsi untuk mengontrol arah gerak kendaraan dengan ";
-        x += doc.getTextWidth(jawabanArray[0].teks);
-        doc.setTextColor(0,0,0);
-        doc.text(teks2, x, y);
+        // Teks kedua
+        const teks2 = " yang berfungsi untuk mengontrol arah gerak kendaraan dengan ";
+        y = tulisTeksWrap(doc, teks2, margin + doc.getTextWidth(teks1 + jawabanArray[0].teks), y - 7, lebar - 2*margin, [0,0,0]);
 
-        x += doc.getTextWidth(teks2);
-        doc.setTextColor(...jawabanArray[1].rgb);
-        doc.text(jawabanArray[1].teks, x, y);
+        // Jawaban kedua
+        y = tulisTeksWrap(doc, jawabanArray[1].teks, margin + doc.getTextWidth(teks1 + jawabanArray[0].teks + teks2), y - 7, lebar - 2*margin, jawabanArray[1].rgb);
 
-        x += doc.getTextWidth(jawabanArray[1].teks);
-        doc.setTextColor(0,0,0);
-        doc.text(".", x, y);
+        // Titik
+        y = tulisTeksWrap(doc, ".", margin + doc.getTextWidth(teks1 + jawabanArray[0].teks + teks2 + jawabanArray[1].teks), y - 7, lebar - 2*margin, [0,0,0]);
 
         // GAMBAR
-        let gambar = document.getElementById("gambarMateri");
+        const gambar = document.getElementById("gambarMateri");
         try {
             let canvas = document.createElement("canvas");
             let ctx = canvas.getContext("2d");
@@ -160,13 +162,13 @@ function download(){
             canvas.height = gambar.naturalHeight;
             ctx.drawImage(gambar, 0, 0);
             let imgData = canvas.toDataURL("image/png");
-            doc.addImage(imgData, "PNG", 20, y + 10, 170, 90);
+            doc.addImage(imgData, "PNG", margin, y + 10, lebar - 2*margin, 90);
         } catch(e){ console.log("gambar gagal"); }
 
         doc.save("STEERING SYSTEM.pdf");
     }
 
-    // LOGO (opsional)
+    // LOGO
     let logo = new Image();
     logo.crossOrigin = "Anonymous";
     logo.src = "https://raw.githubusercontent.com/dadangtrilaksono78-cpu/Materi-Mbah-Dudunk/main/logo.png";
