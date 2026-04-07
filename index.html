@@ -45,7 +45,7 @@
 Steering system (sistem kemudi) adalah 
 <span contenteditable="true" class="input-inline"></span> 
 yang berfungsi untuk mengontrol arah gerak kendaraan dengan 
-<span contenteditable="true" class="input-inline"></span>
+<span contenteditable="true" class="input-inline"></span>.
 </p>
 
 <img id="gambarMateri"
@@ -53,7 +53,6 @@ src="https://raw.githubusercontent.com/dadangtrilaksono78-cpu/Materi-Mbah-Dudunk
 width="100%" crossorigin="anonymous">
 
 <p><b>WARNA TEXT:</b></p>
-
 <input type="color" onchange="warna(this.value)">
 
 <button onclick="download()">DOWNLOAD</button>
@@ -62,16 +61,24 @@ width="100%" crossorigin="anonymous">
 
 <script>
 let warnaAktif = "black";
-const input = document.querySelector(".input-inline");
+const inputs = document.querySelectorAll(".input-inline");
 
+// Fungsi untuk pilih warna
 function warna(color){
     warnaAktif = color;
+    inputs.forEach(input => {
+        input.style.color = warnaAktif;
+    });
 }
 
-input.addEventListener("input", function(){
-    this.style.color = warnaAktif;
+// Pasang event input ke semua span
+inputs.forEach(input => {
+    input.addEventListener("input", function(){
+        this.style.color = warnaAktif;
+    });
 });
 
+// Konversi hex ke RGB untuk jsPDF
 function hexToRgb(hex){
     if(hex === "red") return [255,0,0];
     if(hex === "blue") return [0,0,255];
@@ -85,19 +92,21 @@ function hexToRgb(hex){
     ];
 }
 
+// Fungsi download PDF
 function download(){
     const { jsPDF } = window.jspdf;
     let doc = new jsPDF();
 
-    let jawaban = input.innerText || "-";
-    let warnaText = input.style.color || "black";
-    let rgb = hexToRgb(warnaText);
-
-    let teksAwal = "Steering system (sistem kemudi) adalah ";
-    let teksAkhir = " yang berfungsi untuk mengontrol arah gerak kendaraan dengan cara membelokkan roda.";
+    // Ambil teks dan warna dari kedua span
+    let jawabanArray = [];
+    inputs.forEach(inp => {
+        jawabanArray.push({
+            teks: inp.innerText || "-",
+            rgb: hexToRgb(inp.style.color || "black")
+        });
+    });
 
     function buatPDF(){
-
         let lebar = doc.internal.pageSize.getWidth();
 
         // ===== HEADER =====
@@ -115,52 +124,46 @@ function download(){
         doc.line(20, 40, lebar-20, 40);
 
         // ===== TEKS =====
-        let fullText = teksAwal + jawaban + teksAkhir;
-        let lines = doc.splitTextToSize(fullText, 170);
-
         let y = 50;
         doc.setFontSize(12);
 
-        lines.forEach(line => {
-            let x = 20;
-            let index = line.indexOf(jawaban);
+        // Teks sebelum jawaban pertama
+        doc.setTextColor(0,0,0);
+        let teks1 = "Steering system (sistem kemudi) adalah ";
+        doc.text(teks1, 20, y);
 
-            if(index !== -1){
-                let sebelum = line.substring(0, index);
-                let sesudah = line.substring(index + jawaban.length);
+        // Jawaban pertama
+        doc.setTextColor(...jawabanArray[0].rgb);
+        let x = 20 + doc.getTextWidth(teks1);
+        doc.text(jawabanArray[0].teks, x, y);
 
-                doc.setTextColor(0,0,0);
-                doc.text(sebelum, x, y);
-                x += doc.getTextWidth(sebelum);
+        // Teks antara jawaban pertama dan kedua
+        doc.setTextColor(0,0,0);
+        let teks2 = " yang berfungsi untuk mengontrol arah gerak kendaraan dengan ";
+        x += doc.getTextWidth(jawabanArray[0].teks);
+        doc.text(teks2, x, y);
 
-                doc.setTextColor(rgb[0], rgb[1], rgb[2]);
-                doc.text(jawaban, x, y);
-                x += doc.getTextWidth(jawaban);
+        // Jawaban kedua
+        doc.setTextColor(...jawabanArray[1].rgb);
+        x += doc.getTextWidth(teks2);
+        doc.text(jawabanArray[1].teks, x, y);
 
-                doc.setTextColor(0,0,0);
-                doc.text(sesudah, x, y);
-            } else {
-                doc.setTextColor(0,0,0);
-                doc.text(line, x, y);
-            }
-
-            y += 7;
-        });
+        // Titik terakhir
+        doc.setTextColor(0,0,0);
+        x += doc.getTextWidth(jawabanArray[1].teks);
+        doc.text(".", x, y);
 
         // ===== GAMBAR MATERI =====
         let gambar = document.getElementById("gambarMateri");
-
         try {
             let canvas = document.createElement("canvas");
             let ctx = canvas.getContext("2d");
 
             canvas.width = gambar.naturalWidth;
             canvas.height = gambar.naturalHeight;
-
             ctx.drawImage(gambar, 0, 0);
 
             let imgData = canvas.toDataURL("image/png");
-
             doc.addImage(imgData, "PNG", 20, y + 10, 170, 90);
         } catch(e){
             console.log("gambar gagal");
@@ -178,7 +181,6 @@ function download(){
         doc.addImage(logo, "PNG", 20, 10, 20, 20, undefined, "FAST");
         buatPDF();
     };
-
     logo.onerror = function(){
         buatPDF();
     };
