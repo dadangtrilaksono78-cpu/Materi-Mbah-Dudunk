@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Latihan Materi</title>
+    <title>Latihan Materi Lengkap</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
         body {
@@ -43,9 +43,16 @@
 
 <p>
 Steering system (sistem kemudi) adalah 
+<span contenteditable="true" class="input-inline"></span>, 
+dan juga memiliki fungsi 
 <span contenteditable="true" class="input-inline"></span> 
-yang berfungsi untuk mengontrol arah gerak kendaraan dengan 
-<span contenteditable="true" class="input-inline"></span>.
+untuk mempermudah pengendalian kendaraan.
+</p>
+
+<p>
+Selain itu, sistem kemudi juga berperan dalam 
+<span contenteditable="true" class="input-inline"></span> 
+dan menjaga stabilitas kendaraan saat melaju.
 </p>
 
 <img id="gambarMateri"
@@ -58,7 +65,6 @@ width="100%" crossorigin="anonymous">
 <button onclick="download()">DOWNLOAD</button>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-
 <script>
 let warnaAktif = "#000000";
 const inputs = document.querySelectorAll(".input-inline");
@@ -90,15 +96,15 @@ function hexToRgb(value){
     ];
 }
 
-// Fungsi tulis teks dengan word wrap dan page break otomatis
+// Fungsi tulis teks panjang dengan word wrap & page break otomatis
 function tulisTeks(doc, teks, x, y, maxWidth, rgb, lineHeight){
     doc.setTextColor(...rgb);
     const pageHeight = doc.internal.pageSize.getHeight();
     const lines = doc.splitTextToSize(teks, maxWidth);
-    for(let i=0; i<lines.length; i++){
-        if(y + lineHeight > pageHeight - 20){ // margin bawah
+    for(let i=0;i<lines.length;i++){
+        if(y + lineHeight > pageHeight - 20){
             doc.addPage();
-            y = 20; // margin atas
+            y = 20;
         }
         doc.text(lines[i], x, y);
         y += lineHeight;
@@ -106,13 +112,14 @@ function tulisTeks(doc, teks, x, y, maxWidth, rgb, lineHeight){
     return y;
 }
 
+// Fungsi download PDF
 function download(){
     const { jsPDF } = window.jspdf;
     let doc = new jsPDF();
 
-    // Ambil semua jawaban
+    // Ambil semua span jawaban
     let jawabanArray = [];
-    inputs.forEach(inp => {
+    inputs.forEach(inp=>{
         let teks = inp.innerText.trim() || "-";
         if(!inp.style.color) inp.style.color = warnaAktif;
         jawabanArray.push({teks: teks, rgb: hexToRgb(inp.style.color)});
@@ -135,14 +142,22 @@ function download(){
         doc.text("STEERING SYSTEM", lebar/2, 35, {align:"center"});
         doc.line(margin, 40, lebar-margin, 40);
 
-        // TEKS
-        const teks1 = "Steering system (sistem kemudi) adalah ";
-        y = tulisTeks(doc, teks1, margin, y, lebar - 2*margin, [0,0,0], lineHeight);
-        y = tulisTeks(doc, jawabanArray[0].teks, margin + doc.getTextWidth(teks1), y-lineHeight, lebar - 2*margin, jawabanArray[0].rgb, lineHeight);
-        const teks2 = " yang berfungsi untuk mengontrol arah gerak kendaraan dengan ";
-        y = tulisTeks(doc, teks2, margin + doc.getTextWidth(teks1 + jawabanArray[0].teks), y-lineHeight, lebar - 2*margin, [0,0,0], lineHeight);
-        y = tulisTeks(doc, jawabanArray[1].teks, margin + doc.getTextWidth(teks1 + jawabanArray[0].teks + teks2), y-lineHeight, lebar - 2*margin, jawabanArray[1].rgb, lineHeight);
-        y = tulisTeks(doc, ".", margin + doc.getTextWidth(teks1 + jawabanArray[0].teks + teks2 + jawabanArray[1].teks), y-lineHeight, lebar - 2*margin, [0,0,0], lineHeight);
+        // Ambil semua paragraph di body
+        const paragraphs = document.querySelectorAll("p");
+        let jawabanIndex = 0;
+
+        paragraphs.forEach(p=>{
+            let nodes = Array.from(p.childNodes);
+            nodes.forEach(node=>{
+                if(node.nodeType === Node.TEXT_NODE){
+                    y = tulisTeks(doc, node.textContent, margin, y, lebar-2*margin, [0,0,0], lineHeight);
+                }else if(node.nodeType === Node.ELEMENT_NODE && node.classList.contains("input-inline")){
+                    y = tulisTeks(doc, jawabanArray[jawabanIndex].teks, margin, y, lebar-2*margin, jawabanArray[jawabanIndex].rgb, lineHeight);
+                    jawabanIndex++;
+                }
+            });
+            y += lineHeight; // spasi antar paragraf
+        });
 
         // GAMBAR
         const gambar = document.getElementById("gambarMateri");
@@ -160,9 +175,10 @@ function download(){
             doc.addImage(imgData,"PNG",margin,y,lebar-2*margin,90);
         }catch(e){console.log("gambar gagal");}
 
-        doc.save("STEERING SYSTEM.pdf");
+        doc.save("STEERING_SYSTEM.pdf");
     }
 
+    // LOGO
     let logo = new Image();
     logo.crossOrigin = "Anonymous";
     logo.src = "https://raw.githubusercontent.com/dadangtrilaksono78-cpu/Materi-Mbah-Dudunk/main/logo.png";
