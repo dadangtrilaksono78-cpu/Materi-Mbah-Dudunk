@@ -20,6 +20,12 @@
             outline: none;
         }
 
+        .form-box input {
+            width: 100%;
+            margin-bottom: 5px;
+            padding: 5px;
+        }
+
         button {
             padding: 12px;
             width: 100%;
@@ -40,6 +46,17 @@
 <body>
 
 <h2>STEERING SYSTEM</h2>
+
+<div class="form-box">
+    <label>Nama :</label>
+    <input type="text" id="nama">
+
+    <label>NRP :</label>
+    <input type="text" id="nrp">
+
+    <label>Jabatan :</label>
+    <input type="text" id="jabatan">
+</div>
 
 <p>
 Steering system (sistem kemudi) adalah 
@@ -91,6 +108,10 @@ function download(){
     const { jsPDF } = window.jspdf;
     let doc = new jsPDF();
 
+    let nama = document.getElementById("nama").value || "-";
+    let nrp = document.getElementById("nrp").value || "-";
+    let jabatan = document.getElementById("jabatan").value || "-";
+
     let jawaban = input.innerText || "-";
     let warnaText = input.style.color || "black";
     let rgb = hexToRgb(warnaText);
@@ -113,6 +134,12 @@ function download(){
 
         doc.setFontSize(16);
         doc.text("STEERING SYSTEM", lebar/2, 35, {align:"center"});
+
+        // ===== IDENTITAS KANAN =====
+        doc.setFontSize(10);
+        doc.text(`Nama : ${nama}`, lebar - 20, 15, {align:"right"});
+        doc.text(`NRP : ${nrp}`, lebar - 20, 21, {align:"right"});
+        doc.text(`Jabatan : ${jabatan}`, lebar - 20, 27, {align:"right"});
 
         doc.line(20, 40, lebar-20, 40);
 
@@ -149,7 +176,7 @@ function download(){
             y += 7;
         });
 
-        // ===== GAMBAR MATERI =====
+        // ===== GAMBAR =====
         let gambar = document.getElementById("gambarMateri");
 
         try {
@@ -164,9 +191,7 @@ function download(){
             let imgData = canvas.toDataURL("image/png");
 
             doc.addImage(imgData, "PNG", 20, y + 10, 170, 90);
-        } catch(e){
-            console.log("gambar gagal");
-        }
+        } catch(e){}
 
         doc.save("STEERING SYSTEM.pdf");
     }
