@@ -18,7 +18,6 @@
             min-width: 200px;
             padding: 2px 5px;
             outline: none;
-            color: black; /* Set default warna di CSS */
         }
 
         button {
@@ -61,44 +60,39 @@ width="100%" crossorigin="anonymous">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
 <script>
-let warnaAktif = "black";
+let warnaAktif = "#000000"; // default warna hitam
 const inputs = document.querySelectorAll(".input-inline");
 
-// ===== Set warna default setiap span =====
+// ===== Set warna default inline agar selalu terbaca oleh jsPDF =====
 inputs.forEach(input => input.style.color = warnaAktif);
 
-// Fungsi untuk pilih warna
+// Fungsi pilih warna
 function warna(color){
     warnaAktif = color;
-    inputs.forEach(input => {
-        input.style.color = warnaAktif;
-    });
+    inputs.forEach(input => input.style.color = warnaAktif);
 }
 
-// Event listener input untuk update warna sesuai warna aktif
+// Pastikan setiap input update warna saat diketik
 inputs.forEach(input => {
     input.addEventListener("input", function(){
         this.style.color = warnaAktif;
     });
 });
 
-// Konversi hex/rgb ke array RGB untuk jsPDF
+// Fungsi konversi hex/rgb ke array RGB
 function hexToRgb(value){
     if(!value) return [0,0,0];
-
     if(value.startsWith("rgb")){
         let nums = value.match(/\d+/g);
         return [parseInt(nums[0]), parseInt(nums[1]), parseInt(nums[2])];
     }
-
     value = value.replace(/^#/, '');
-    if(value.length === 3){
-        value = value.split('').map(c => c + c).join('');
-    }
-    const r = parseInt(value.substring(0,2), 16);
-    const g = parseInt(value.substring(2,4), 16);
-    const b = parseInt(value.substring(4,6), 16);
-    return [r, g, b];
+    if(value.length === 3) value = value.split('').map(c => c+c).join('');
+    return [
+        parseInt(value.substring(0,2),16),
+        parseInt(value.substring(2,4),16),
+        parseInt(value.substring(4,6),16)
+    ];
 }
 
 // Fungsi download PDF
@@ -106,19 +100,19 @@ function download(){
     const { jsPDF } = window.jspdf;
     let doc = new jsPDF();
 
-    // Ambil teks & warna dari span
+    // Ambil teks & warna dari span, set default jika kosong
     let jawabanArray = [];
     inputs.forEach(inp => {
-        jawabanArray.push({
-            teks: inp.innerText || "-",
-            rgb: hexToRgb(inp.style.color || "#000000")
-        });
+        let teks = inp.innerText.trim() || "-";
+        // pastikan style.color ada, jika kosong set warnaAktif
+        if(!inp.style.color) inp.style.color = warnaAktif;
+        jawabanArray.push({ teks: teks, rgb: hexToRgb(inp.style.color) });
     });
 
     function buatPDF(){
         let lebar = doc.internal.pageSize.getWidth();
 
-        // ===== HEADER =====
+        // HEADER
         doc.setFont(undefined, "bold");
         doc.setFontSize(12);
         doc.text("BASIC AUTOMOTIVE TECHNOLOGY", 45, 18);
@@ -132,37 +126,32 @@ function download(){
 
         doc.line(20, 40, lebar-20, 40);
 
-        // ===== TEKS =====
+        // TEKS
         let y = 50;
         doc.setFontSize(12);
 
-        // Teks sebelum jawaban pertama
-        doc.setTextColor(0,0,0);
         let teks1 = "Steering system (sistem kemudi) adalah ";
+        doc.setTextColor(0,0,0);
         doc.text(teks1, 20, y);
 
-        // Jawaban pertama
-        doc.setTextColor(...jawabanArray[0].rgb);
         let x = 20 + doc.getTextWidth(teks1);
+        doc.setTextColor(...jawabanArray[0].rgb);
         doc.text(jawabanArray[0].teks, x, y);
 
-        // Teks antara jawaban pertama dan kedua
-        doc.setTextColor(0,0,0);
         let teks2 = " yang berfungsi untuk mengontrol arah gerak kendaraan dengan ";
         x += doc.getTextWidth(jawabanArray[0].teks);
+        doc.setTextColor(0,0,0);
         doc.text(teks2, x, y);
 
-        // Jawaban kedua
-        doc.setTextColor(...jawabanArray[1].rgb);
         x += doc.getTextWidth(teks2);
+        doc.setTextColor(...jawabanArray[1].rgb);
         doc.text(jawabanArray[1].teks, x, y);
 
-        // Titik terakhir
-        doc.setTextColor(0,0,0);
         x += doc.getTextWidth(jawabanArray[1].teks);
+        doc.setTextColor(0,0,0);
         doc.text(".", x, y);
 
-        // ===== GAMBAR MATERI =====
+        // GAMBAR
         let gambar = document.getElementById("gambarMateri");
         try {
             let canvas = document.createElement("canvas");
@@ -170,28 +159,24 @@ function download(){
             canvas.width = gambar.naturalWidth;
             canvas.height = gambar.naturalHeight;
             ctx.drawImage(gambar, 0, 0);
-
             let imgData = canvas.toDataURL("image/png");
             doc.addImage(imgData, "PNG", 20, y + 10, 170, 90);
-        } catch(e){
-            console.log("gambar gagal");
-        }
+        } catch(e){ console.log("gambar gagal"); }
 
         doc.save("STEERING SYSTEM.pdf");
     }
 
-    // ===== LOGO =====
+    // LOGO (opsional)
     let logo = new Image();
     logo.crossOrigin = "Anonymous";
     logo.src = "https://raw.githubusercontent.com/dadangtrilaksono78-cpu/Materi-Mbah-Dudunk/main/logo.png";
-
     logo.onload = function(){
         doc.addImage(logo, "PNG", 20, 10, 20, 20, undefined, "FAST");
         buatPDF();
-    };
+    }
     logo.onerror = function(){
         buatPDF();
-    };
+    }
 }
 </script>
 
