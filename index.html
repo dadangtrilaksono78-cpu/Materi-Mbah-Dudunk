@@ -35,12 +35,6 @@
             border-radius: 8px;
             margin-top: 20px;
         }
-
-        button:not([onclick="download()"]) {
-            width: auto;
-            background-color: #555;
-            margin-top: 5px;
-        }
     </style>
 </head>
 <body>
@@ -75,7 +69,17 @@ width="100%" crossorigin="anonymous">
 <script>
 const input = document.querySelector(".input-inline");
 
-function download(){
+function loadImage(url){
+    return new Promise((resolve, reject)=>{
+        let img = new Image();
+        img.crossOrigin = "Anonymous";
+        img.src = url;
+        img.onload = ()=> resolve(img);
+        img.onerror = reject;
+    });
+}
+
+async function download(){
     const { jsPDF } = window.jspdf;
     let doc = new jsPDF();
 
@@ -88,76 +92,75 @@ function download(){
     let teksAwal = "Steering system (sistem kemudi) adalah ";
     let teksAkhir = " yang berfungsi untuk mengontrol arah gerak kendaraan dengan cara membelokkan roda.";
 
-    function buatPDF(){
-
-        let lebar = doc.internal.pageSize.getWidth();
-
-        // ===== LOGO =====
-        doc.addImage(logo, "PNG", 20, 10, 20, 20);
-
-        // ===== HEADER =====
-        doc.setFont(undefined, "bold");
-        doc.setFontSize(12);
-        doc.text("BASIC AUTOMOTIVE TECHNOLOGY", 45, 18);
-
-        doc.setFont(undefined, "normal");
-        doc.setFontSize(10);
-        doc.text("Materi Pelatihan Otomotif Dasar", 45, 24);
-
-        doc.setFontSize(16);
-        doc.text("STEERING SYSTEM", lebar/2, 35, {align:"center"});
-
-        // ===== IDENTITAS =====
-        doc.setFontSize(10);
-        doc.text(`Nama : ${nama}`, lebar - 20, 15, {align:"right"});
-        doc.text(`ID : ${nrp}`, lebar - 20, 21, {align:"right"});
-        doc.text(`Jabatan : ${jabatan}`, lebar - 20, 27, {align:"right"});
-
-        doc.line(20, 40, lebar-20, 40);
-
-        // ===== PARAGRAF JUSTIFY =====
-        let fullText = teksAwal + jawaban + teksAkhir;
-
-        doc.setFontSize(12);
-        doc.setTextColor(0,0,0);
-
-        doc.text(fullText, 20, 50, {
-            maxWidth: 170,
-            align: "justify",
-            lineHeightFactor: 1.5
-        });
-
-        // ===== GAMBAR =====
-        let gambar = document.getElementById("gambarMateri");
-
-        try {
-            let canvas = document.createElement("canvas");
-            let ctx = canvas.getContext("2d");
-
-            canvas.width = gambar.naturalWidth;
-            canvas.height = gambar.naturalHeight;
-
-            ctx.drawImage(gambar, 0, 0);
-
-            let imgData = canvas.toDataURL("image/png");
-
-            doc.addImage(imgData, "PNG", 20, 90, 170, 90);
-        } catch(e){}
-
-        doc.save("STEERING SYSTEM.pdf");
-    }
+    let lebar = doc.internal.pageSize.getWidth();
 
     // ===== LOAD LOGO =====
-    let logo = new Image();
-    logo.src = "https://raw.githubusercontent.com/dadangtrilaksono78-cpu/Materi-Mbah-Dudunk/main/logo.png";
+    let logoURL = "https://raw.githubusercontent.com/dadangtrilaksono78-cpu/Materi-Mbah-Dudunk/main/logo.png";
+    let gambarURL = document.getElementById("gambarMateri").src;
 
-    logo.onload = function(){
-        buatPDF();
-    };
+    let logo, gambar;
 
-    logo.onerror = function(){
-        buatPDF();
-    };
+    try {
+        logo = await loadImage(logoURL);
+    } catch(e){}
+
+    try {
+        gambar = await loadImage(gambarURL);
+    } catch(e){}
+
+    // ===== HEADER =====
+    if (logo){
+        doc.addImage(logo, "PNG", 20, 10, 20, 20);
+    }
+
+    doc.setFont(undefined, "bold");
+    doc.setFontSize(12);
+    doc.text("BASIC AUTOMOTIVE TECHNOLOGY", 45, 18);
+
+    doc.setFont(undefined, "normal");
+    doc.setFontSize(10);
+    doc.text("Materi Pelatihan Otomotif Dasar", 45, 24);
+
+    doc.setFontSize(16);
+    doc.text("STEERING SYSTEM", lebar/2, 35, {align:"center"});
+
+    // ===== IDENTITAS =====
+    doc.setFontSize(10);
+    doc.text(`Nama : ${nama}`, lebar - 20, 15, {align:"right"});
+    doc.text(`ID : ${nrp}`, lebar - 20, 21, {align:"right"});
+    doc.text(`Jabatan : ${jabatan}`, lebar - 20, 27, {align:"right"});
+
+    doc.line(20, 40, lebar-20, 40);
+
+    // ===== PARAGRAF =====
+    let fullText = teksAwal + jawaban + teksAkhir;
+
+    doc.setFontSize(12);
+    doc.text(fullText, 20, 50, {
+        maxWidth: 170,
+        align: "justify",
+        lineHeightFactor: 1.5
+    });
+
+    // ===== GAMBAR =====
+    if (gambar){
+        let canvas = document.createElement("canvas");
+        let ctx = canvas.getContext("2d");
+
+        canvas.width = gambar.naturalWidth;
+        canvas.height = gambar.naturalHeight;
+
+        ctx.drawImage(gambar, 0, 0);
+
+        let imgData = canvas.toDataURL("image/png");
+
+        doc.addImage(imgData, "PNG", 20, 90, 170, 90);
+    }
+
+    // ===== SAVE =====
+    setTimeout(()=>{
+        doc.save("STEERING SYSTEM.pdf");
+    }, 300);
 }
 </script>
 
