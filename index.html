@@ -65,20 +65,16 @@ Fungsi utama steering system:
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <!-- SCRIPT UTAMA -->
 <script>
+let warnaAktif = "black";
+
 function warna(color) {
-    let selection = window.getSelection();
-    if (!selection.rangeCount) return;
-    let range = selection.getRangeAt(0);
-    let parent = range.commonAncestorContainer;
-    if (!document.querySelector(".input-inline").contains(parent)) {
-        alert("Blok teks di area jawaban dulu!");
-        return;
-    }
-    let span = document.createElement("span");
-    span.style.color = color;
-    span.appendChild(range.extractContents());
-    range.insertNode(span);
+    warnaAktif = color;
 }
+
+// otomatis pakai warna saat mengetik
+document.querySelector(".input-inline").addEventListener("input", function() {
+    this.style.color = warnaAktif;
+});
 function download() {
     const { jsPDF } = window.jspdf;
     let doc = new jsPDF();
