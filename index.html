@@ -49,7 +49,7 @@ yang berfungsi untuk mengontrol arah gerak kendaraan dengan cara membelokkan rod
 
 <img id="gambarMateri"
 src="https://raw.githubusercontent.com/dadangtrilaksono78-cpu/Materi-Mbah-Dudunk/main/Steering01.png"
-width="100%">
+width="100%" crossorigin="anonymous">
 
 <p><b>Pilih Warna:</b></p>
 
@@ -74,66 +74,54 @@ input.addEventListener("input", function(){
     this.style.color = warnaAktif;
 });
 
-// HEX → RGB
 function hexToRgb(hex){
     if(hex === "red") return [255,0,0];
     if(hex === "blue") return [0,0,255];
     if(hex === "black") return [0,0,0];
 
     hex = hex.replace("#","");
-    let r = parseInt(hex.substring(0,2),16);
-    let g = parseInt(hex.substring(2,4),16);
-    let b = parseInt(hex.substring(4,6),16);
-
-    return [r,g,b];
+    return [
+        parseInt(hex.substring(0,2),16),
+        parseInt(hex.substring(2,4),16),
+        parseInt(hex.substring(4,6),16)
+    ];
 }
 
 function download(){
     const { jsPDF } = window.jspdf;
     let doc = new jsPDF();
 
-    let jawaban = input.innerText;
+    let jawaban = input.innerText || "-";
 
     let warnaText = input.style.color || "black";
     let rgb = hexToRgb(warnaText);
 
     let teksAwal = "Steering system (sistem kemudi) adalah ";
-    let teksJawaban = jawaban;
     let teksAkhir = " yang berfungsi untuk mengontrol arah gerak kendaraan dengan cara membelokkan roda.";
 
-    let fullText = teksAwal + teksJawaban + teksAkhir;
+    let fullText = teksAwal + jawaban + teksAkhir;
 
-    let margin = 20;
-    let maxWidth = 170;
-
-    let lines = doc.splitTextToSize(fullText, maxWidth);
+    let lines = doc.splitTextToSize(fullText, 170);
 
     let y = 50;
-
     doc.setFontSize(12);
 
     lines.forEach(line => {
-        let x = margin;
+        let x = 20;
+        let index = line.indexOf(jawaban);
 
-        // cek posisi jawaban di baris ini
-        let indexAwal = line.indexOf(teksJawaban);
+        if(index !== -1){
+            let sebelum = line.substring(0, index);
+            let sesudah = line.substring(index + jawaban.length);
 
-        if(indexAwal !== -1){
-            let sebelum = line.substring(0, indexAwal);
-            let tengah = teksJawaban;
-            let sesudah = line.substring(indexAwal + tengah.length);
-
-            // sebelum (hitam)
             doc.setTextColor(0,0,0);
             doc.text(sebelum, x, y);
             x += doc.getTextWidth(sebelum);
 
-            // jawaban (warna)
             doc.setTextColor(rgb[0], rgb[1], rgb[2]);
-            doc.text(tengah, x, y);
-            x += doc.getTextWidth(tengah);
+            doc.text(jawaban, x, y);
+            x += doc.getTextWidth(jawaban);
 
-            // sesudah (hitam)
             doc.setTextColor(0,0,0);
             doc.text(sesudah, x, y);
 
@@ -145,22 +133,39 @@ function download(){
         y += 7;
     });
 
-    // GAMBAR
+    // ===== FIX BAGIAN GAMBAR =====
     let gambar = document.getElementById("gambarMateri");
 
-    let canvas = document.createElement("canvas");
-    let ctx = canvas.getContext("2d");
+    function selesai(){
+        doc.save("STEERING SYSTEM.pdf");
+    }
 
-    canvas.width = gambar.naturalWidth;
-    canvas.height = gambar.naturalHeight;
+    if (gambar.complete && gambar.naturalWidth !== 0) {
+        prosesGambar();
+    } else {
+        gambar.onload = prosesGambar;
+        gambar.onerror = selesai;
+    }
 
-    ctx.drawImage(gambar, 0, 0);
+    function prosesGambar(){
+        try {
+            let canvas = document.createElement("canvas");
+            let ctx = canvas.getContext("2d");
 
-    let imgData = canvas.toDataURL("image/png");
+            canvas.width = gambar.naturalWidth;
+            canvas.height = gambar.naturalHeight;
 
-    doc.addImage(imgData, "PNG", 20, y + 10, 170, 90);
+            ctx.drawImage(gambar, 0, 0);
 
-    doc.save("STEERING SYSTEM.pdf");
+            let imgData = canvas.toDataURL("image/png");
+
+            doc.addImage(imgData, "PNG", 20, y + 10, 170, 90);
+        } catch (e) {
+            console.log("Gagal load gambar:", e);
+        }
+
+        selesai();
+    }
 }
 </script>
 
