@@ -18,6 +18,7 @@
             min-width: 200px;
             padding: 2px 5px;
             outline: none;
+            color: black; /* Set default warna di CSS */
         }
 
         button {
@@ -63,6 +64,9 @@ width="100%" crossorigin="anonymous">
 let warnaAktif = "black";
 const inputs = document.querySelectorAll(".input-inline");
 
+// ===== Set warna default setiap span =====
+inputs.forEach(input => input.style.color = warnaAktif);
+
 // Fungsi untuk pilih warna
 function warna(color){
     warnaAktif = color;
@@ -71,26 +75,24 @@ function warna(color){
     });
 }
 
-// Pasang event input ke semua span
+// Event listener input untuk update warna sesuai warna aktif
 inputs.forEach(input => {
     input.addEventListener("input", function(){
         this.style.color = warnaAktif;
     });
 });
 
-// Konversi hex ke RGB untuk jsPDF
+// Konversi hex/rgb ke array RGB untuk jsPDF
 function hexToRgb(value){
     if(!value) return [0,0,0];
 
-    // Jika format rgb(r,g,b)
     if(value.startsWith("rgb")){
         let nums = value.match(/\d+/g);
         return [parseInt(nums[0]), parseInt(nums[1]), parseInt(nums[2])];
     }
 
-    // Jika format hex (#rrggbb)
     value = value.replace(/^#/, '');
-    if(value.length === 3){ // support short hex, misal #f00
+    if(value.length === 3){
         value = value.split('').map(c => c + c).join('');
     }
     const r = parseInt(value.substring(0,2), 16);
@@ -98,17 +100,18 @@ function hexToRgb(value){
     const b = parseInt(value.substring(4,6), 16);
     return [r, g, b];
 }
+
 // Fungsi download PDF
 function download(){
     const { jsPDF } = window.jspdf;
     let doc = new jsPDF();
 
-    // Ambil semua teks & warna dari span
+    // Ambil teks & warna dari span
     let jawabanArray = [];
     inputs.forEach(inp => {
         jawabanArray.push({
             teks: inp.innerText || "-",
-            rgb: hexToRgb(inp.style.color || "black")
+            rgb: hexToRgb(inp.style.color || "#000000")
         });
     });
 
