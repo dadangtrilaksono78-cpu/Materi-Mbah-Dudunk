@@ -161,14 +161,31 @@ function download(){
     });
 
     // GAMBAR
-    let img = document.getElementById("gambarMateri");
+// === GAMBAR AMAN ===
+let img = new Image();
+img.crossOrigin = "Anonymous";
+img.src = document.getElementById("gambarMateri").src;
+
+img.onload = function(){
     let canvas = document.createElement("canvas");
     let ctx = canvas.getContext("2d");
-    canvas.width = img.naturalWidth;
-    canvas.height = img.naturalHeight;
+
+    canvas.width = img.width;
+    canvas.height = img.height;
     ctx.drawImage(img,0,0);
 
     let data = canvas.toDataURL("image/png");
+
+    doc.addPage();
+    doc.addImage(data,"PNG",20,20,170,90);
+
+    doc.save("STEERING_SYSTEM.pdf"); // ⬅️ pindah ke sini
+}
+
+img.onerror = function(){
+    alert("Gambar gagal, PDF tetap didownload");
+    doc.save("STEERING_SYSTEM.pdf");
+}
 
     doc.addPage();
     doc.addImage(data,"PNG",20,20,170,90);
