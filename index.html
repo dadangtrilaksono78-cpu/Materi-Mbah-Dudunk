@@ -61,7 +61,7 @@ dan menjaga stabilitas kendaraan saat melaju.
     src="https://raw.githubusercontent.com/dadangtrilaksono78-cpu/Materi-Mbah-Dudunk/main/Steering02.png"
     width="100%" crossorigin="anonymous">
 
-    <!-- Label di gambar -->
+    <!-- Label -->
     <span contenteditable="true" class="label-box" style="top:20px; left:30px;"></span>
     <span contenteditable="true" class="label-box" style="top:80px; left:150px;"></span>
     <span contenteditable="true" class="label-box" style="top:140px; left:80px;"></span>
@@ -79,9 +79,13 @@ dan menjaga stabilitas kendaraan saat melaju.
 <p><b>WARNA TEXT:</b></p>
 <input type="color" onchange="warna(this.value)">
 
-<button onclick="download()">DOWNLOAD</button>
+<button onclick="download()" type="button">DOWNLOAD PDF</button>
 
+<!-- jsPDF -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script>
+window.jsPDF = window.jspdf.jsPDF;
+</script>
 
 <script>
 let warnaAktif = "#000000";
@@ -109,7 +113,6 @@ function hexToRgb(hex){
     ];
 }
 
-// fungsi tulis
 function tulis(doc, teks, x, y, maxWidth, rgb){
     doc.setTextColor(...rgb);
     const lines = doc.splitTextToSize(teks, maxWidth);
@@ -121,7 +124,6 @@ function tulis(doc, teks, x, y, maxWidth, rgb){
 }
 
 function download(){
-    const { jsPDF } = window.jspdf;
     let doc = new jsPDF();
 
     const margin = 20;
@@ -134,13 +136,11 @@ function download(){
     doc.line(margin,25,lebar-margin,25);
 
     // PARAGRAF
-    const paragraphs = document.querySelectorAll("p");
     let jawaban = document.querySelectorAll(".input-inline");
     let index = 0;
 
-    paragraphs.forEach(p=>{
-        let nodes = p.childNodes;
-        nodes.forEach(n=>{
+    document.querySelectorAll("p").forEach(p=>{
+        p.childNodes.forEach(n=>{
             if(n.nodeType === 3){
                 y = tulis(doc, n.textContent, margin, y, lebar-40, [0,0,0]);
             }else if(n.classList && n.classList.contains("input-inline")){
@@ -154,39 +154,36 @@ function download(){
     });
 
     // LIST
-    let list = document.querySelectorAll("ol li");
-    list.forEach((li,i)=>{
+    document.querySelectorAll("ol li").forEach((li,i)=>{
         let isi = li.innerText || "-";
         y = tulis(doc, (i+1)+". "+isi, margin, y, lebar-40, [0,0,0]);
     });
 
-    // GAMBAR
-// === GAMBAR AMAN ===
-let img = new Image();
-img.crossOrigin = "Anonymous";
-img.src = document.getElementById("gambarMateri").src;
+    // === GAMBAR AMAN ===
+    let img = new Image();
+    img.crossOrigin = "Anonymous";
+    img.src = document.getElementById("gambarMateri").src;
 
-img.onload = function(){
-    let canvas = document.createElement("canvas");
-    let ctx = canvas.getContext("2d");
+    img.onload = function(){
+        let canvas = document.createElement("canvas");
+        let ctx = canvas.getContext("2d");
 
-    canvas.width = img.width;
-    canvas.height = img.height;
-    ctx.drawImage(img,0,0);
+        canvas.width = img.width;
+        canvas.height = img.height;
+        ctx.drawImage(img,0,0);
 
-    let data = canvas.toDataURL("image/png");
+        let data = canvas.toDataURL("image/png");
 
-    doc.addPage();
-    doc.addImage(data,"PNG",20,20,170,90);
+        doc.addPage();
+        doc.addImage(data,"PNG",20,20,170,90);
 
-    doc.save("STEERING_SYSTEM.pdf"); // ⬅️ pindah ke sini
-}
+        doc.save("STEERING_SYSTEM.pdf");
+    }
 
-img.onerror = function(){
-    alert("Gambar gagal, PDF tetap didownload");
-    doc.save("STEERING_SYSTEM.pdf");
-}
-    
+    img.onerror = function(){
+        alert("Gambar gagal dimuat, PDF tetap didownload");
+        doc.save("STEERING_SYSTEM.pdf");
+    }
 }
 </script>
 
