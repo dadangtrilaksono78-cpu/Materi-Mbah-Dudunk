@@ -3,6 +3,10 @@
 <head>
     <title>Latihan Materi</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- PRELOAD GAMBAR BIAR CEPAT -->
+    <link rel="preload" as="image" href="https://cdn.jsdelivr.net/gh/dadangtrilaksono78-cpu/Materi-Mbah-Dudunk@main/Steering01.png">
+
     <style>
         body {
             font-family: Arial;
@@ -47,9 +51,12 @@ Steering system (sistem kemudi) adalah
 yang berfungsi untuk mengontrol arah gerak kendaraan dengan cara membelokkan roda.
 </p>
 
+<p id="loadingText">Loading gambar...</p>
+
 <img id="gambarMateri"
-src="https://raw.githubusercontent.com/dadangtrilaksono78-cpu/Materi-Mbah-Dudunk/main/Steering01.png"
-width="100%" crossorigin="anonymous">
+src="https://cdn.jsdelivr.net/gh/dadangtrilaksono78-cpu/Materi-Mbah-Dudunk@main/Steering01.png"
+width="100%" crossorigin="anonymous" loading="lazy"
+onload="document.getElementById('loadingText').style.display='none'">
 
 <p><b>Pilih Warna:</b></p>
 
@@ -102,7 +109,7 @@ function download(){
 
         let lebar = doc.internal.pageSize.getWidth();
 
-        // ===== HEADER =====
+        // HEADER
         doc.setFont(undefined, "bold");
         doc.setFontSize(12);
         doc.text("BASIC AUTOMOTIVE TECHNOLOGY", 45, 18);
@@ -116,7 +123,7 @@ function download(){
 
         doc.line(20, 40, lebar-20, 40);
 
-        // ===== TEKS =====
+        // TEKS
         let fullText = teksAwal + jawaban + teksAkhir;
         let lines = doc.splitTextToSize(fullText, 170);
 
@@ -149,7 +156,7 @@ function download(){
             y += 7;
         });
 
-        // ===== GAMBAR MATERI =====
+        // GAMBAR
         let gambar = document.getElementById("gambarMateri");
 
         try {
@@ -171,9 +178,9 @@ function download(){
         doc.save("STEERING SYSTEM.pdf");
     }
 
-    // ===== LOGO =====
+    // LOGO (pakai CDN juga)
     let logo = new Image();
-    logo.src = "https://raw.githubusercontent.com/dadangtrilaksono78-cpu/Materi-Mbah-Dudunk/main/logo.png";
+    logo.src = "https://cdn.jsdelivr.net/gh/dadangtrilaksono78-cpu/Materi-Mbah-Dudunk@main/logo.png";
 
     logo.onload = function(){
         doc.addImage(logo, "PNG", 20, 10, 20, 20);
@@ -188,4 +195,3 @@ function download(){
 
 </body>
 </html>
-
