@@ -4,7 +4,6 @@
     <title>Latihan Materi</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <!-- PRELOAD GAMBAR BIAR CEPAT -->
     <link rel="preload" as="image" href="https://cdn.jsdelivr.net/gh/dadangtrilaksono78-cpu/Materi-Mbah-Dudunk@main/Steering01.png">
 
     <style>
@@ -21,6 +20,15 @@
             border-bottom: 1px dotted black;
             min-width: 200px;
             padding: 2px 5px;
+            outline: none;
+        }
+
+        .input-block {
+            display: block;
+            border-bottom: 1px dotted black;
+            width: 100%;
+            margin: 8px 0;
+            padding: 4px;
             outline: none;
         }
 
@@ -58,6 +66,14 @@ src="https://cdn.jsdelivr.net/gh/dadangtrilaksono78-cpu/Materi-Mbah-Dudunk@main/
 width="100%" crossorigin="anonymous" loading="lazy"
 onload="document.getElementById('loadingText').style.display='none'">
 
+<!-- ===== TAMBAHAN ISIAN ===== -->
+<p><b>Keterangan Gambar:</b></p>
+
+<div contenteditable="true" class="input-block"></div>
+<div contenteditable="true" class="input-block"></div>
+<div contenteditable="true" class="input-block"></div>
+<div contenteditable="true" class="input-block"></div>
+
 <p><b>Pilih Warna:</b></p>
 
 <button onclick="warna('red')" style="background:red">Red</button>
@@ -71,14 +87,19 @@ onload="document.getElementById('loadingText').style.display='none'">
 
 <script>
 let warnaAktif = "black";
+
 const input = document.querySelector(".input-inline");
+const inputsTambahan = document.querySelectorAll(".input-block");
 
 function warna(color){
     warnaAktif = color;
 }
 
-input.addEventListener("input", function(){
-    this.style.color = warnaAktif;
+// warna untuk semua input
+[input, ...inputsTambahan].forEach(el => {
+    el.addEventListener("input", function(){
+        this.style.color = warnaAktif;
+    });
 });
 
 function hexToRgb(hex){
@@ -109,7 +130,6 @@ function download(){
 
         let lebar = doc.internal.pageSize.getWidth();
 
-        // HEADER
         doc.setFont(undefined, "bold");
         doc.setFontSize(12);
         doc.text("BASIC AUTOMOTIVE TECHNOLOGY", 45, 18);
@@ -123,7 +143,7 @@ function download(){
 
         doc.line(20, 40, lebar-20, 40);
 
-        // TEKS
+        // TEKS UTAMA
         let fullText = teksAwal + jawaban + teksAkhir;
         let lines = doc.splitTextToSize(fullText, 170);
 
@@ -171,14 +191,27 @@ function download(){
             let imgData = canvas.toDataURL("image/png");
 
             doc.addImage(imgData, "PNG", 20, y + 10, 170, 90);
+            y += 110;
         } catch(e){
             console.log("gambar gagal");
         }
 
+        // TAMBAHAN KETERANGAN
+        doc.setTextColor(0,0,0);
+        doc.setFontSize(12);
+        doc.text("Keterangan:", 20, y);
+
+        y += 10;
+
+        inputsTambahan.forEach(el => {
+            let isi = el.innerText || "-";
+            doc.text("- " + isi, 25, y);
+            y += 7;
+        });
+
         doc.save("STEERING SYSTEM.pdf");
     }
 
-    // LOGO (pakai CDN juga)
     let logo = new Image();
     logo.src = "https://cdn.jsdelivr.net/gh/dadangtrilaksono78-cpu/Materi-Mbah-Dudunk@main/logo.png";
 
