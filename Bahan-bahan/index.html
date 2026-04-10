@@ -1,16 +1,241 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Materi Otomotif</title>
+    <title>Editing Materi</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="preload" as="image" href="https://cdn.jsdelivr.net/gh/dadangtrilaksono78-cpu/Materi-Mbah-Dudunk@main/Steering02.png">
+
+    <style>
+        body {
+            font-family: Arial;
+            padding: 20px;
+            max-width: 700px;
+            margin: auto;
+        }
+        h2 { text-align: center; }
+
+        .input-inline {
+            display: inline-block;
+            border-bottom: 1px dotted black;
+            min-width: 200px;
+            padding: 2px 5px;
+            outline: none;
+        }
+
+        .input-row {
+            display: flex;
+            align-items: center;
+            margin: 8px 0;
+        }
+
+        .nomor {
+            width: 25px;
+        }
+
+        .input-block {
+            flex: 1;
+            border-bottom: 1px dotted black;
+            padding: 4px;
+            outline: none;
+        }
+
+        button {
+            padding: 12px;
+            width: 100%;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            margin-top: 20px;
+            transition: 0.3s;
+        }
+
+        button:not([onclick="download()"]) {
+            width: auto;
+            background-color: #555;
+            margin-top: 5px;
+        }
+    </style>
 </head>
 <body>
 
-<h2>DAFTAR MATERI</h2>
+<h2>STEERING SYSTEM</h2>
 
-<ul>
-    <li><a href="Steering/">Steering System</a></li>
-    <li><a href="Suspension/">Suspension System</a></li>
-</ul>
+<p>
+//ISI MATERI DISINI
+</p>
+
+<p id="loadingText">Loading gambar...</p>
+    
+//ISI GAMBAR DISINI
+<img id="gambarMateri"
+src="https://cdn.jsdelivr.net/gh/dadangtrilaksono78-cpu/Materi-Mbah-Dudunk@main/....png"
+width="100%" crossorigin="anonymous" loading="lazy"
+onload="document.getElementById('loadingText').style.display='none'">
+
+<p><b>Keterangan Gambar:</b></p>
+
+<div class="input-row">
+    <span class="nomor">1.</span>
+    <div contenteditable="true" class="input-block"></div>
+</div>
+
+<div class="input-row">
+    <span class="nomor">2.</span>
+    <div contenteditable="true" class="input-block"></div>
+</div>
+
+<div class="input-row">
+    <span class="nomor">3.</span>
+    <div contenteditable="true" class="input-block"></div>
+</div>
+
+<div class="input-row">
+    <span class="nomor">4.</span>
+    <div contenteditable="true" class="input-block"></div>
+</div>
+
+<p><b>Pilih Warna:</b></p>
+
+<button onclick="warna('red')" style="background:red">Red</button>
+<button onclick="warna('blue')" style="background:blue">Blue</button>
+<button onclick="warna('black')" style="background:black">Black</button>
+<input type="color" onchange="warna(this.value)">
+
+<button id="btnDownload" onclick="download()">DOWNLOAD</button>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+<script>
+let warnaAktif = "black";
+
+const input = document.querySelector(".input-inline");
+const inputsTambahan = document.querySelectorAll(".input-block");
+
+function warna(color){
+    warnaAktif = color;
+}
+
+[input, ...inputsTambahan].forEach(el => {
+    el.addEventListener("input", function(){
+        this.style.color = warnaAktif;
+    });
+});
+
+function hexToRgb(hex){
+    if(hex === "red") return [255,0,0];
+    if(hex === "blue") return [0,0,255];
+    if(hex === "black") return [0,0,0];
+
+    hex = hex.replace("#","");
+    return [
+        parseInt(hex.substring(0,2),16),
+        parseInt(hex.substring(2,4),16),
+        parseInt(hex.substring(4,6),16)
+    ];
+}
+
+// ===== LOADING BUTTON =====
+function setLoading(state){
+    const btn = document.getElementById("btnDownload");
+
+    if(state){
+        btn.style.backgroundColor = "#999";
+        btn.innerText = "Processing...";
+        btn.disabled = true;
+    } else {
+        btn.style.backgroundColor = "#4CAF50";
+        btn.innerText = "DOWNLOAD";
+        btn.disabled = false;
+    }
+}
+
+function download(){
+    setLoading(true);
+
+    const { jsPDF } = window.jspdf;
+    let doc = new jsPDF();
+
+    let jawaban = input.innerText || "-";
+
+    let teksAwal = "Steering system (sistem kemudi) adalah ";
+    let teksAkhir = " yang berfungsi untuk mengontrol arah gerak kendaraan dengan cara membelokkan roda.";
+
+    function buatPDF(){
+
+        let lebar = doc.internal.pageSize.getWidth();
+
+        doc.setFont(undefined, "bold");
+        doc.setFontSize(12);
+        doc.text("BASIC AUTOMOTIVE TECHNOLOGY", 45, 18);
+
+        doc.setFont(undefined, "normal");
+        doc.setFontSize(10);
+        doc.text("Materi Pelatihan Otomotif Dasar", 45, 24);
+
+        doc.setFontSize(16);
+        doc.text("STEERING SYSTEM", lebar/2, 35, {align:"center"});
+
+        doc.line(20, 40, lebar-20, 40);
+
+        let fullText = teksAwal + jawaban + teksAkhir;
+        let lines = doc.splitTextToSize(fullText, 170);
+
+        let y = 50;
+        doc.setFontSize(12);
+
+        lines.forEach(line => {
+            doc.text(line, 20, y);
+            y += 7;
+        });
+
+        let gambar = document.getElementById("gambarMateri");
+
+        try {
+            let canvas = document.createElement("canvas");
+            let ctx = canvas.getContext("2d");
+
+            canvas.width = gambar.naturalWidth;
+            canvas.height = gambar.naturalHeight;
+
+            ctx.drawImage(gambar, 0, 0);
+
+            let imgData = canvas.toDataURL("image/png");
+
+            doc.addImage(imgData, "PNG", 20, y + 10, 170, 90);
+            y += 110;
+        } catch(e){
+            console.log("gambar gagal");
+        }
+
+        doc.text("Keterangan:", 20, y);
+        y += 10;
+
+        inputsTambahan.forEach((el, index) => {
+            let isi = el.innerText || "-";
+            doc.text((index + 1) + ". " + isi, 25, y);
+            y += 7;
+        });
+
+        doc.save("STEERING SYSTEM.pdf");
+
+        setLoading(false);
+    }
+
+    let logo = new Image();
+    logo.src = "https://cdn.jsdelivr.net/gh/dadangtrilaksono78-cpu/Materi-Mbah-Dudunk@main/logo.png";
+
+    logo.onload = function(){
+        doc.addImage(logo, "PNG", 20, 10, 20, 20);
+        buatPDF();
+    };
+
+    logo.onerror = function(){
+        buatPDF();
+    };
+}
+</script>
 
 </body>
 </html>
