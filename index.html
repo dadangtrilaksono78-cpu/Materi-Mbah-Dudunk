@@ -4,7 +4,7 @@
     <title>Latihan Materi</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <link rel="preload" as="image" href="https://cdn.jsdelivr.net/gh/dadangtrilaksono78-cpu/Materi-Mbah-Dudunk@main/Steering02.png">
+    <link rel="preload" as="image" href="https://cdn.jsdelivr.net/gh/dadangtrilaksono78-cpu/Materi-Mbah-Dudunk@main/Steering01.png">
 
     <style>
         body {
@@ -48,6 +48,7 @@
             border: none;
             border-radius: 8px;
             margin-top: 20px;
+            transition: 0.3s;
         }
 
         button:not([onclick="download()"]) {
@@ -74,7 +75,6 @@ src="https://cdn.jsdelivr.net/gh/dadangtrilaksono78-cpu/Materi-Mbah-Dudunk@main/
 width="100%" crossorigin="anonymous" loading="lazy"
 onload="document.getElementById('loadingText').style.display='none'">
 
-<!-- ===== KETERANGAN DENGAN NOMOR ===== -->
 <p><b>Keterangan Gambar:</b></p>
 
 <div class="input-row">
@@ -104,7 +104,7 @@ onload="document.getElementById('loadingText').style.display='none'">
 <button onclick="warna('black')" style="background:black">Black</button>
 <input type="color" onchange="warna(this.value)">
 
-<button onclick="download()">DOWNLOAD</button>
+<button id="btnDownload" onclick="download()">DOWNLOAD</button>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
@@ -137,13 +137,28 @@ function hexToRgb(hex){
     ];
 }
 
+// ===== LOADING BUTTON =====
+function setLoading(state){
+    const btn = document.getElementById("btnDownload");
+
+    if(state){
+        btn.style.backgroundColor = "#999";
+        btn.innerText = "Processing...";
+        btn.disabled = true;
+    } else {
+        btn.style.backgroundColor = "#4CAF50";
+        btn.innerText = "DOWNLOAD";
+        btn.disabled = false;
+    }
+}
+
 function download(){
+    setLoading(true);
+
     const { jsPDF } = window.jspdf;
     let doc = new jsPDF();
 
     let jawaban = input.innerText || "-";
-    let warnaText = input.style.color || "black";
-    let rgb = hexToRgb(warnaText);
 
     let teksAwal = "Steering system (sistem kemudi) adalah ";
     let teksAkhir = " yang berfungsi untuk mengontrol arah gerak kendaraan dengan cara membelokkan roda.";
@@ -195,7 +210,6 @@ function download(){
             console.log("gambar gagal");
         }
 
-        // KETERANGAN PDF DENGAN NOMOR
         doc.text("Keterangan:", 20, y);
         y += 10;
 
@@ -206,6 +220,8 @@ function download(){
         });
 
         doc.save("STEERING SYSTEM.pdf");
+
+        setLoading(false);
     }
 
     let logo = new Image();
