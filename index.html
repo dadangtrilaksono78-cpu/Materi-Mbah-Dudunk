@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Latihan Materi Lengkap</title>
+    <title>Latihan Materi</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
         body {
@@ -10,7 +10,6 @@
             max-width: 700px;
             margin: auto;
         }
-
         h2 { text-align: center; }
 
         .input-inline {
@@ -19,14 +18,6 @@
             min-width: 200px;
             padding: 2px 5px;
             outline: none;
-        }
-
-        .label-box {
-            position: absolute;
-            background: rgba(255,255,255,0.7);
-            border: 1px solid #000;
-            padding: 2px 5px;
-            min-width: 50px;
         }
 
         button {
@@ -38,6 +29,12 @@
             border-radius: 8px;
             margin-top: 20px;
         }
+
+        button:not([onclick="download()"]) {
+            width: auto;
+            background-color: #555;
+            margin-top: 5px;
+        }
     </style>
 </head>
 <body>
@@ -46,65 +43,42 @@
 
 <p>
 Steering system (sistem kemudi) adalah 
-<span contenteditable="true" class="input-inline"></span>, 
-dan juga memiliki fungsi untuk mempermudah pengendalian kendaraan.
-</p>
-
-<p>
-Selain itu, sistem kemudi juga berperan dalam 
 <span contenteditable="true" class="input-inline"></span> 
-dan menjaga stabilitas kendaraan saat melaju.
+yang berfungsi untuk mengontrol arah gerak kendaraan dengan cara membelokkan roda.
 </p>
 
-<div style="position: relative;">
-    <img id="gambarMateri"
-    src="https://raw.githubusercontent.com/dadangtrilaksono78-cpu/Materi-Mbah-Dudunk/main/Steering02.png"
-    width="100%" crossorigin="anonymous">
+<img id="gambarMateri"
+src="https://raw.githubusercontent.com/dadangtrilaksono78-cpu/Materi-Mbah-Dudunk/main/Steering01.png"
+width="100%" crossorigin="anonymous">
 
-    <!-- Label -->
-    <span contenteditable="true" class="label-box" style="top:20px; left:30px;"></span>
-    <span contenteditable="true" class="label-box" style="top:80px; left:150px;"></span>
-    <span contenteditable="true" class="label-box" style="top:140px; left:80px;"></span>
-</div>
+<p><b>Pilih Warna:</b></p>
 
-<p><b>Identifikasi Komponen:</b></p>
-
-<ol>
-<li><span contenteditable="true" class="input-inline"></span></li>
-<li><span contenteditable="true" class="input-inline"></span></li>
-<li><span contenteditable="true" class="input-inline"></span></li>
-<li><span contenteditable="true" class="input-inline"></span></li>
-</ol>
-
-<p><b>WARNA TEXT:</b></p>
+<button onclick="warna('red')" style="background:red">Red</button>
+<button onclick="warna('blue')" style="background:blue">Blue</button>
+<button onclick="warna('black')" style="background:black">Black</button>
 <input type="color" onchange="warna(this.value)">
 
-<button onclick="download()" type="button">DOWNLOAD PDF</button>
+<button onclick="download()">DOWNLOAD</button>
 
-<!-- jsPDF -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-<script>
-window.jsPDF = window.jspdf.jsPDF;
-</script>
 
 <script>
-let warnaAktif = "#000000";
-const inputs = document.querySelectorAll(".input-inline");
+let warnaAktif = "black";
+const input = document.querySelector(".input-inline");
 
-inputs.forEach(i => i.style.color = warnaAktif);
-
-function warna(c){
-    warnaAktif = c;
-    inputs.forEach(i => i.style.color = warnaAktif);
+function warna(color){
+    warnaAktif = color;
 }
 
-inputs.forEach(input=>{
-    input.addEventListener("input", function(){
-        this.style.color = warnaAktif;
-    });
+input.addEventListener("input", function(){
+    this.style.color = warnaAktif;
 });
 
 function hexToRgb(hex){
+    if(hex === "red") return [255,0,0];
+    if(hex === "blue") return [0,0,255];
+    if(hex === "black") return [0,0,0];
+
     hex = hex.replace("#","");
     return [
         parseInt(hex.substring(0,2),16),
@@ -113,79 +87,105 @@ function hexToRgb(hex){
     ];
 }
 
-function tulis(doc, teks, x, y, maxWidth, rgb){
-    doc.setTextColor(...rgb);
-    const lines = doc.splitTextToSize(teks, maxWidth);
-    lines.forEach(line=>{
-        doc.text(line, x, y);
-        y += 7;
-    });
-    return y;
-}
-
 function download(){
+    const { jsPDF } = window.jspdf;
     let doc = new jsPDF();
 
-    const margin = 20;
-    let y = 50;
-    const lebar = doc.internal.pageSize.getWidth();
+    let jawaban = input.innerText || "-";
+    let warnaText = input.style.color || "black";
+    let rgb = hexToRgb(warnaText);
 
-    // HEADER
-    doc.setFontSize(14);
-    doc.text("STEERING SYSTEM", lebar/2, 20, {align:"center"});
-    doc.line(margin,25,lebar-margin,25);
+    let teksAwal = "Steering system (sistem kemudi) adalah ";
+    let teksAkhir = " yang berfungsi untuk mengontrol arah gerak kendaraan dengan cara membelokkan roda.";
 
-    // PARAGRAF
-    let jawaban = document.querySelectorAll(".input-inline");
-    let index = 0;
+    function buatPDF(){
 
-    document.querySelectorAll("p").forEach(p=>{
-        p.childNodes.forEach(n=>{
-            if(n.nodeType === 3){
-                y = tulis(doc, n.textContent, margin, y, lebar-40, [0,0,0]);
-            }else if(n.classList && n.classList.contains("input-inline")){
-                let teks = jawaban[index].innerText || "-";
-                let rgb = hexToRgb(jawaban[index].style.color || "#000000");
-                y = tulis(doc, teks, margin, y, lebar-40, rgb);
-                index++;
+        let lebar = doc.internal.pageSize.getWidth();
+
+        // ===== HEADER =====
+        doc.setFont(undefined, "bold");
+        doc.setFontSize(12);
+        doc.text("BASIC AUTOMOTIVE TECHNOLOGY", 45, 18);
+
+        doc.setFont(undefined, "normal");
+        doc.setFontSize(10);
+        doc.text("Materi Pelatihan Otomotif Dasar", 45, 24);
+
+        doc.setFontSize(16);
+        doc.text("STEERING SYSTEM", lebar/2, 35, {align:"center"});
+
+        doc.line(20, 40, lebar-20, 40);
+
+        // ===== TEKS =====
+        let fullText = teksAwal + jawaban + teksAkhir;
+        let lines = doc.splitTextToSize(fullText, 170);
+
+        let y = 50;
+        doc.setFontSize(12);
+
+        lines.forEach(line => {
+            let x = 20;
+            let index = line.indexOf(jawaban);
+
+            if(index !== -1){
+                let sebelum = line.substring(0, index);
+                let sesudah = line.substring(index + jawaban.length);
+
+                doc.setTextColor(0,0,0);
+                doc.text(sebelum, x, y);
+                x += doc.getTextWidth(sebelum);
+
+                doc.setTextColor(rgb[0], rgb[1], rgb[2]);
+                doc.text(jawaban, x, y);
+                x += doc.getTextWidth(jawaban);
+
+                doc.setTextColor(0,0,0);
+                doc.text(sesudah, x, y);
+            } else {
+                doc.setTextColor(0,0,0);
+                doc.text(line, x, y);
             }
+
+            y += 7;
         });
-        y += 5;
-    });
 
-    // LIST
-    document.querySelectorAll("ol li").forEach((li,i)=>{
-        let isi = li.innerText || "-";
-        y = tulis(doc, (i+1)+". "+isi, margin, y, lebar-40, [0,0,0]);
-    });
+        // ===== GAMBAR MATERI =====
+        let gambar = document.getElementById("gambarMateri");
 
-    // === GAMBAR AMAN ===
-    let img = new Image();
-    img.crossOrigin = "Anonymous";
-    img.src = document.getElementById("gambarMateri").src;
+        try {
+            let canvas = document.createElement("canvas");
+            let ctx = canvas.getContext("2d");
 
-    img.onload = function(){
-        let canvas = document.createElement("canvas");
-        let ctx = canvas.getContext("2d");
+            canvas.width = gambar.naturalWidth;
+            canvas.height = gambar.naturalHeight;
 
-        canvas.width = img.width;
-        canvas.height = img.height;
-        ctx.drawImage(img,0,0);
+            ctx.drawImage(gambar, 0, 0);
 
-        let data = canvas.toDataURL("image/png");
+            let imgData = canvas.toDataURL("image/png");
 
-        doc.addPage();
-        doc.addImage(data,"PNG",20,20,170,90);
+            doc.addImage(imgData, "PNG", 20, y + 10, 170, 90);
+        } catch(e){
+            console.log("gambar gagal");
+        }
 
-        doc.save("STEERING_SYSTEM.pdf");
+        doc.save("STEERING SYSTEM.pdf");
     }
 
-    img.onerror = function(){
-        alert("Gambar gagal dimuat, PDF tetap didownload");
-        doc.save("STEERING_SYSTEM.pdf");
-    }
+    // ===== LOGO =====
+    let logo = new Image();
+    logo.src = "https://raw.githubusercontent.com/dadangtrilaksono78-cpu/Materi-Mbah-Dudunk/main/logo.png";
+
+    logo.onload = function(){
+        doc.addImage(logo, "PNG", 20, 10, 20, 20);
+        buatPDF();
+    };
+
+    logo.onerror = function(){
+        buatPDF();
+    };
 }
 </script>
 
 </body>
 </html>
+
