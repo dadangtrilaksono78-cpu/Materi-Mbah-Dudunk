@@ -23,11 +23,19 @@
             outline: none;
         }
 
-        .input-block {
-            display: block;
-            border-bottom: 1px dotted black;
-            width: 100%;
+        .input-row {
+            display: flex;
+            align-items: center;
             margin: 8px 0;
+        }
+
+        .nomor {
+            width: 25px;
+        }
+
+        .input-block {
+            flex: 1;
+            border-bottom: 1px dotted black;
             padding: 4px;
             outline: none;
         }
@@ -66,13 +74,28 @@ src="https://cdn.jsdelivr.net/gh/dadangtrilaksono78-cpu/Materi-Mbah-Dudunk@main/
 width="100%" crossorigin="anonymous" loading="lazy"
 onload="document.getElementById('loadingText').style.display='none'">
 
-<!-- ===== TAMBAHAN ISIAN ===== -->
+<!-- ===== KETERANGAN DENGAN NOMOR ===== -->
 <p><b>Keterangan Gambar:</b></p>
 
-<div contenteditable="true" class="input-block"></div>
-<div contenteditable="true" class="input-block"></div>
-<div contenteditable="true" class="input-block"></div>
-<div contenteditable="true" class="input-block"></div>
+<div class="input-row">
+    <span class="nomor">1.</span>
+    <div contenteditable="true" class="input-block"></div>
+</div>
+
+<div class="input-row">
+    <span class="nomor">2.</span>
+    <div contenteditable="true" class="input-block"></div>
+</div>
+
+<div class="input-row">
+    <span class="nomor">3.</span>
+    <div contenteditable="true" class="input-block"></div>
+</div>
+
+<div class="input-row">
+    <span class="nomor">4.</span>
+    <div contenteditable="true" class="input-block"></div>
+</div>
 
 <p><b>Pilih Warna:</b></p>
 
@@ -95,7 +118,6 @@ function warna(color){
     warnaAktif = color;
 }
 
-// warna untuk semua input
 [input, ...inputsTambahan].forEach(el => {
     el.addEventListener("input", function(){
         this.style.color = warnaAktif;
@@ -143,7 +165,6 @@ function download(){
 
         doc.line(20, 40, lebar-20, 40);
 
-        // TEKS UTAMA
         let fullText = teksAwal + jawaban + teksAkhir;
         let lines = doc.splitTextToSize(fullText, 170);
 
@@ -151,32 +172,10 @@ function download(){
         doc.setFontSize(12);
 
         lines.forEach(line => {
-            let x = 20;
-            let index = line.indexOf(jawaban);
-
-            if(index !== -1){
-                let sebelum = line.substring(0, index);
-                let sesudah = line.substring(index + jawaban.length);
-
-                doc.setTextColor(0,0,0);
-                doc.text(sebelum, x, y);
-                x += doc.getTextWidth(sebelum);
-
-                doc.setTextColor(rgb[0], rgb[1], rgb[2]);
-                doc.text(jawaban, x, y);
-                x += doc.getTextWidth(jawaban);
-
-                doc.setTextColor(0,0,0);
-                doc.text(sesudah, x, y);
-            } else {
-                doc.setTextColor(0,0,0);
-                doc.text(line, x, y);
-            }
-
+            doc.text(line, 20, y);
             y += 7;
         });
 
-        // GAMBAR
         let gambar = document.getElementById("gambarMateri");
 
         try {
@@ -196,16 +195,13 @@ function download(){
             console.log("gambar gagal");
         }
 
-        // TAMBAHAN KETERANGAN
-        doc.setTextColor(0,0,0);
-        doc.setFontSize(12);
+        // KETERANGAN PDF DENGAN NOMOR
         doc.text("Keterangan:", 20, y);
-
         y += 10;
 
-        inputsTambahan.forEach(el => {
+        inputsTambahan.forEach((el, index) => {
             let isi = el.innerText || "-";
-            doc.text("- " + isi, 25, y);
+            doc.text((index + 1) + ". " + isi, 25, y);
             y += 7;
         });
 
