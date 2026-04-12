@@ -1,11 +1,9 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Editing Materi</title>
+    <title>Template Materi</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <link rel="preload" as="image" href="https://cdn.jsdelivr.net/gh/dadangtrilaksono78-cpu/Materi-Mbah-Dudunk@main/Steering02.png">
-
+    
     <style>
         body {
             font-family: Arial;
@@ -13,227 +11,683 @@
             max-width: 700px;
             margin: auto;
         }
+
         h2 { text-align: center; }
+
+        .header {
+            display: flex;
+            align-items: stretch;
+            border-bottom: 2px solid black;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+        }
+
+        .logo {
+            height: 150px;
+            width: auto;
+            margin-right: 20px;
+        }
+
+        .header-text {
+            flex: 1;
+        }
+
+        /* ✅ FIX: GRID LABEL + TITIK DUA SUPAYA LURUS */
+        .input-row {
+            display: grid;
+            grid-template-columns: 140px 20px 1fr;
+            align-items: center;
+            margin: 6px 0;
+        }
+
+        .label {
+            font-weight: normal;
+        }
+
+        .colon {
+            text-align: center;
+        }
 
         .input-inline {
             display: inline-block;
             border-bottom: 1px dotted black;
             min-width: 200px;
-            padding: 2px 5px;
             outline: none;
-        }
-
-        .input-row {
-            display: flex;
-            align-items: center;
-            margin: 8px 0;
-        }
-
-        .nomor {
-            width: 25px;
         }
 
         .input-block {
-            flex: 1;
             border-bottom: 1px dotted black;
-            padding: 4px;
             outline: none;
+            min-height: 18px;
         }
 
         button {
             padding: 12px;
             width: 100%;
-            background-color: #4CAF50;
+            background: green;
             color: white;
             border: none;
-            border-radius: 8px;
             margin-top: 20px;
-            transition: 0.3s;
+            border-radius: 6px;
+            cursor: pointer;
         }
 
-        button:not([onclick="download()"]) {
-            width: auto;
-            background-color: #555;
-            margin-top: 5px;
+        #btnDownload.loading {
+            background: gray;
+            cursor: not-allowed;
         }
+
+        #colorPicker {
+            width: 60px;
+            height: 40px;
+            border: none;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        .input-block, p {
+            white-space: pre-wrap;
+        } 
+        .keterangan-gambar {
+    margin-top: 10px;
+        }
+
+        .ket-item {
+            display: flex;
+            gap: 8px;
+            margin: 4px 0;
+        }
+
+        .nomor {
+            width: 20px;
+            font-weight: bold;
+        }
+
+        .ket-text {
+            flex: 1;
+            border-bottom: 1px dotted black;
+            min-height: 18px;
+            outline: none;
+        } 
+        .color-toolbar {
+            display: flex;
+            gap: 8px;
+            padding: 8px 0;
+            margin: 10px 0;
+            flex-wrap: wrap;
+        }
+
+        .color-box {
+            width: 28px;
+            height: 28px;
+            border-radius: 4px;
+            cursor: pointer;
+            border: 2px solid #ddd;
+            transition: 0.2s;
+        }
+
+        .color-box:hover {
+            transform: scale(1.15);
+            border: 2px solid #000;
+        } 
     </style>
 </head>
+
 <body>
 
-<h2>ISI JUDUL DISINI</h2>
+<div class="header">
+    <img id="logoImg" src="logo.png" class="logo">
 
+    <div class="header-text">
+
+        <h3>
+            BASIC AUTOMOTIVE TECHNOLOGY
+        </h3>
+
+        <div class="input-row">
+            <div class="label">NAMA PEMATERI</div>
+            <div class="colon">:</div>
+            <div contenteditable="true" class="input-block" id="pemateri"></div>
+        </div>
+
+        <div class="input-row">
+            <div class="label">NAMA PESERTA</div>
+            <div class="colon">:</div>
+            <div contenteditable="true" class="input-block" id="peserta"></div>
+        </div>
+
+        <div class="input-row">
+            <div class="label">ID</div>
+            <div class="colon">:</div>
+            <div contenteditable="true" class="input-block" id="idPeserta"></div>
+        </div>
+
+        <div class="input-row">
+            <div class="label">TANGGAL</div>
+            <div class="colon">:</div>
+            <div contenteditable="true" class="input-block" id="tanggal"></div>
+        </div>
+
+    </div>
+</div>
+<div style="display:flex; align-items:center; gap:10px; margin:10px 0;">
+    <span>TEXT EDITING</span>
+<div class="color-toolbar">
+
+    <div class="color-box" style="background:#000000" onclick="setWarna('#000000')"></div>
+    <div class="color-box" style="background:#ff0000" onclick="setWarna('#ff0000')"></div>
+    <div class="color-box" style="background:#00ff00" onclick="setWarna('#00ff00')"></div>
+    <div class="color-box" style="background:#0000ff" onclick="setWarna('#0000ff')"></div>
+    <div class="color-box" style="background:#ffff00" onclick="setWarna('#ffff00')"></div>
+    <div class="color-box" style="background:#ff00ff" onclick="setWarna('#ff00ff')"></div>
+    <div class="color-box" style="background:#00ffff" onclick="setWarna('#00ffff')"></div>
+
+</div>
+</div>
+<h2>WHEEL ALIGNMENT</h2>
+
+<img src="./Steering02.png" id="gambarMateri" style="max-width:100%; margin:10px 0;">
+<div class="keterangan-gambar">
+
+    <div class="ket-item">
+        <span class="nomor">1.</span>
+        <div contenteditable="true" class="ket-text"></div>
+    </div>
+
+    <div class="ket-item">
+        <span class="nomor">2.</span>
+        <div contenteditable="true" class="ket-text"></div>
+    </div>
+
+    <div class="ket-item">
+        <span class="nomor">3.</span>
+        <div contenteditable="true" class="ket-text"></div>
+    </div>
+
+    <div class="ket-item">
+        <span class="nomor">4.</span>
+        <div contenteditable="true" class="ket-text"></div>
+    </div>
 <p>
-ISI MATERI DISINI
+Pengaturan kombinasi sudut-sudut pada roda yang besarnya harus memenuhi persyaratan tertentu, agar:
+
+• Kendaraan berjalan menjadi lebih stabil
+• Mudah dikendalikan dan ringan sewaktu berbelok
+• Pengemudi lebih nyaman dalam mengendarai kendaraan
+• Mengurangi keausan ban
+
+WHEEL ALIGNMENT MELIPUTI:
+
+1. Camber
+2. Caster
+3. Steering Axis Inclination (King Pin Inclination)
+4. Toe - Angle (Toe-In & Toe-Out)
+5. Turning Radius (Wheel Angle, Turning Angle)
+
+Faktor yang mempengaruhi wheel alignment:
+
+• Sistem Kemudi
+• Sistem Suspensi
+• Sistem Penggerak Roda
+• Kondisi Chassis
+
+SUDUT CAMBER
+
+Sudut yang dibentuk oleh garis simetris ban terhadap garis vertikal dilihat dari depan kendaraan
+
+Jika tidak dilengkapi dengan camber, maka saat kendaraan akan diberi beban, roda depan akan miring dimana telapak bawah ban lebih mengarah ke luar dibandingkan yang di atas sehingga kemudi berat
+
+Fungsi Camber
+
+• Menjaga agar camber tidak negatif bila kendaraan dibebani
+• Menjaga kontak yang maksimal antara telapak ban dan permukaan jalan
+• Membuat pengemudian lebih mantap
+
+SUDUT CAMBER – Efek
+
+• Mengurangi efek ketidakstabilan bantalan
+• Letak beban kendaraan pada spindel mendekati bantalan dapat menyebabkan getaran yang ditimbulkan spindel diteruskan ke sistem kemudi
+
+ISI GAMBAR DARI PDF
+
+Positif camber yang berlebihan akan mengakibatkan:
+
+• Keausan ban pada bagian luar
+• Distribusi beban mobil pada telapak tidak merata
+• Tekanan pada suspensi dan steering system
+
+SUDUT CAMBER (Negatif)
+
+• Keausan ban pada bagian dalam
+• Distribusi beban tidak merata
+• Tekanan pada suspensi dan steering system
+
+Bila terjadi perbedaan nilai camber yang besar pada kedua roda, maka akan menyebabkan stir narik ke kiri/kanan
+
+Negatif camber yang berlebihan akan mengakibatkan:
+
+SUDUT CAMBER (Lanjutan)
+
+• Getaran roda kemudi besar dan tidak stabil
+• Stabilitas pengemudian berkurang
+• Keausan ban lebih merata
+
+PERBEDAAN SUDUT CAMBER
+
+• Perbedaan sudut camber adalah selisih antara kiri dan kanan
+• Batas yang diijinkan biasanya ±0,5°
+
+Jika camber kiri lebih besar dari kanan (>0,5°), kendaraan akan cenderung ke kiri (efek kerucut)
+
+CASTER
+
+Caster adalah kemiringan steering axis ke depan atau belakang terhadap garis tegak lurus (dilihat dari samping)
+
+Fungsi: menjaga kestabilan roda saat lurus walaupun kemudi dilepas
+
+CASTER POSITIF & NEGATIF
+
+Caster Positif: steering axis miring ke belakang
+Caster Negatif: steering axis miring ke depan
+
+ISI GAMBAR DARI PDF
+
+CASTER NOL
+
+Steering axis sejajar dengan garis tegak lurus
+
+PENGARUH CASTER
+
+Perbedaan yang diijinkan: 30’
+
+• Caster positif → stabil, daya balik baik
+• Caster negatif → tidak stabil, kemudi ringan, kurang kontrol
+
+DAMPAK CASTER TIDAK TEPAT
+
+• Stir tertarik ke satu sisi
+• Kemudi berat (jika berlebihan)
+• Kurang stabil (jika terlalu kecil)
+• Getaran roda kemudi
+• Ban aus tidak merata
+
+STEERING AXIS INCLINATION (SAI) / KPI
+
+Steering axis = tumpuan roda saat belok
+
+SAI = sudut kemiringan sumbu kemudi terhadap vertikal (dilihat dari depan)
+
+ISI GAMBAR DARI PDF
+
+FUNGSI SAI
+
+• Memperkecil steering effort
+• Membuat kemudi lebih ringan
+
+Cara:
+• Camber dibuat positif
+• Steering axis dimiringkan
+
+Jika tidak tepat:
+
+• Mempengaruhi camber
+• Kickback meningkat
+• Torque steer jika beda kiri-kanan
+
+INCLUDED ANGLE (IA)
+
+IA = SAI + Camber
+
+Berfungsi untuk koreksi kondisi suspensi roda kiri dan kanan
+
+TOE ANGLE
+
+Fungsi: mencegah camber thrust
+
+SUDUT TOE
+
+Toe In: bagian depan roda lebih sempit
+
+Dampak jika salah:
+• Ban aus tidak merata
+• Stir tidak stabil
+• Tarikan ke satu sisi
+
+Toe Out: bagian depan lebih lebar
+
+TURNING RADIUS
+
+Sudut roda saat belok mempengaruhi wheel alignment
+
+Jika sudut roda sama → terjadi slip
+
+Roda harus berputar pada satu titik pusat
+
+ISI GAMBAR DARI PDF
+
+FUNGSI TURNING RADIUS
+
+• Memudahkan roda bergerak
+• Mencegah gesekan antar roda saat belok
+
+PEMERIKSAAN AWAL
+
+Sebelum spooring:
+
+• Tekanan ban normal
+• Keausan ban
+• Run-out ban
+• Ball joint
+• Tie-rod end
+• Bantalan roda
+• Bushing
+• Strut bar
+• Wheelbase
+• Steering linkage
+• Suspensi
+• Kemiringan body
+
+PENYETELAN WHEEL ALIGNMENT
+
+Sudut caster
+Sudut camber
+
+ISI GAMBAR DARI PDF
+
+PENYETELAN TOE
+
+Mengubah panjang tie-rod
+
+DATA SPOORING
+
+ISI GAMBAR DARI PDF
+
+DIAGNOSIS KERUSAKAN BAN
+
+Penyebab:
+
+• SAI
+• Ball joint
+• Bearing
+• Bushing
+• Shock
+• Toe bar
+• Axle
+• Frame
+
+PERTANYAAN DIAGNOSIS
+
+Caster?
+Camber?
+Toe?
+Bushing?
+Ball joint?
+Bearing?
+
+DIAGRAM TULANG IKAN
+
+ISI GAMBAR DARI PDF
+
+KERUSAKAN BAN (TEKANAN ANGIN)
+
+ISI GAMBAR DARI PDF
+
+KERUSAKAN BAN (TOE & CAMBER)
+
+ISI GAMBAR DARI PDF
+
+KERUSAKAN BAN LAINNYA
+
+Toe terlalu besar
+Camber terlalu positif/negatif
+
+ISI GAMBAR DARI PDF
 </p>
 
-<p id="loadingText">Loading gambar...</p>
-    
-//ISI GAMBAR DISINI
-<img id="gambarMateri"
-src="https://cdn.jsdelivr.net/gh/dadangtrilaksono78-cpu/Materi-Mbah-Dudunk@main/....png"
-width="100%" crossorigin="anonymous" loading="lazy"
-onload="document.getElementById('loadingText').style.display='none'">
 
-<p><b>Keterangan Gambar:</b></p>
-
-<div class="input-row">
-    <span class="nomor">1.</span>
-    <div contenteditable="true" class="input-block"></div>
-</div>
-
-<div class="input-row">
-    <span class="nomor">2.</span>
-    <div contenteditable="true" class="input-block"></div>
-</div>
-
-<div class="input-row">
-    <span class="nomor">3.</span>
-    <div contenteditable="true" class="input-block"></div>
-</div>
-
-<div class="input-row">
-    <span class="nomor">4.</span>
-    <div contenteditable="true" class="input-block"></div>
-</div>
-
-<p><b>Pilih Warna:</b></p>
-
-<button onclick="warna('red')" style="background:red">Red</button>
-<button onclick="warna('blue')" style="background:blue">Blue</button>
-<button onclick="warna('black')" style="background:black">Black</button>
-<input type="color" onchange="warna(this.value)">
 
 <button id="btnDownload" onclick="download()">DOWNLOAD</button>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
 
 <script>
+
+function setWarna(c){
+    warnaAktif = c;
+}
 let warnaAktif = "black";
 
-const input = document.querySelector(".input-inline");
-const inputsTambahan = document.querySelectorAll(".input-block");
-
-function warna(color){
-    warnaAktif = color;
+// ambil semua contenteditable
+function applyColor(el){
+    el.style.color = warnaAktif;
 }
 
-[input, ...inputsTambahan].forEach(el => {
-    el.addEventListener("input", function(){
-        this.style.color = warnaAktif;
+// event global untuk semua contenteditable
+document.addEventListener("input", function(e){
+    if(e.target.isContentEditable){
+        e.target.style.color = warnaAktif;
+    }
+});
+function ambilWarnaText(el){
+    let style = window.getComputedStyle(el);
+    let rgb = style.color.match(/\d+/g);
+    return [
+        parseInt(rgb[0]),
+        parseInt(rgb[1]),
+        parseInt(rgb[2])
+    ];
+}   
+function resetWarna(doc){
+    doc.setTextColor(0,0,0);
+}
+async function download(){
+    let btn = document.getElementById("btnDownload");
+
+    btn.innerHTML = "Processing ⏳";
+    btn.classList.add("loading");
+    btn.disabled = true;
+
+    setTimeout(async () => {
+
+        const { jsPDF } = window.jspdf;
+        let doc = new jsPDF();
+
+        let pageHeight = doc.internal.pageSize.height;
+        let marginLeft = 20;
+        let marginTop = 20;
+        let lineHeight = 6;
+        let y = 50;
+
+        // DATA
+        let pemateriEl = document.getElementById("pemateri");
+        let pesertaEl = document.getElementById("peserta");
+        let idEl = document.getElementById("idPeserta");
+        let tanggalEl = document.getElementById("tanggal");
+
+        let pemateri = pemateriEl.innerText || "-";
+        let peserta = pesertaEl.innerText || "-";
+        let idPeserta = idEl.innerText || "-";
+        let tanggal = tanggalEl.innerText || "-";
+
+        let warnaPemateri = ambilWarnaText(pemateriEl);
+        let warnaPeserta = ambilWarnaText(pesertaEl);
+        let warnaId = ambilWarnaText(idEl);
+        let warnaTanggal = ambilWarnaText(tanggalEl);
+
+        doc.setTextColor(0,0,0);
+
+        let startX = 45;
+        let colonX = 95;
+        let valueX = 100;
+
+        doc.text("NAMA PEMATERI", startX, 15);
+        doc.text(":", colonX, 15);
+
+        doc.text("NAMA PESERTA", startX, 22);
+        doc.text(":", colonX, 22);
+
+        doc.text("ID", startX, 29);
+        doc.text(":", colonX, 29);
+
+        doc.text("TANGGAL", startX, 36);
+        doc.text(":", colonX, 36);
+
+        // isi pakai warna masing-masing
+        doc.setTextColor(...warnaPemateri);
+        doc.text(pemateri, valueX, 15);
+
+        doc.setTextColor(...warnaPeserta);
+        doc.text(peserta, valueX, 22);
+
+        doc.setTextColor(...warnaId);
+        doc.text(idPeserta, valueX, 29);
+
+        doc.setTextColor(...warnaTanggal);
+        doc.text(tanggal, valueX, 36);
+        // LOGO
+        let logo = document.getElementById("logoImg");
+        if (logo) {
+            doc.addImage(logo, "PNG", 10, 10, 25, 25);
+        }
+
+        doc.setTextColor(0,0,0);
+        doc.setFontSize(14);
+        doc.text("BASIC AUTOMOTIVE TECHNOLOGY", 105, 8, { align: "center" });
+
+        doc.setFontSize(11);
+
+        y +=-5;
+        doc.line(15, y, 195, y);
+        y += 10;
+
+        doc.setTextColor(0,0,0);
+        resetWarna(doc); // ⬅️ TARUH DI SINI
+        doc.setFont(undefined, "bold");
+        doc.setFontSize(16);
+        doc.text("WHEEL ALIGNMENT", 105, y, { align: "center" });
+
+        doc.setFont(undefined, "normal");
+        y += 10;
+
+        // 🔥 FIX GAMBAR 
+        let img = document.getElementById("gambarMateri");
+
+        await new Promise(resolve => {
+            if (img.complete) resolve();
+            else img.onload = resolve;
+        });
+
+        const canvas = document.createElement("canvas");
+        const ctx = canvas.getContext("2d");
+
+        canvas.width = img.naturalWidth;
+        canvas.height = img.naturalHeight;
+
+        ctx.drawImage(img, 0, 0);
+
+        const imgData = canvas.toDataURL("image/png");
+
+        let imgWidth = 170;
+        let imgHeight = (img.naturalHeight / img.naturalWidth) * imgWidth;
+
+        doc.addImage(imgData, "PNG", 20, y, imgWidth, imgHeight);
+
+        y += imgHeight + 10;
+
+                let ketItems = document.querySelectorAll(".ket-item");
+
+        if(ketItems.length > 0){
+            doc.setFont(undefined, "normal");
+            doc.setFontSize(10); // balikin lagi ke normal
+            doc.setTextColor(0,0,0);
+            resetWarna(doc); // ⬅️ DI SINI
+            y += 6;
+
+ketItems.forEach((item, i) => {
+
+    let el = item.querySelector(".ket-text");
+
+    let text = el.innerText;
+    let warna = ambilWarnaText(el);
+
+    let nomor = `${i+1}. `; // angka tetap hitam
+
+    let wrapped = doc.splitTextToSize(text, 150); // khusus isi teks saja
+
+    wrapped.forEach((l, index) => {
+
+        if (y > pageHeight - 20) {
+            doc.addPage();
+            y = marginTop;
+        }
+
+        if(index === 0){
+            // 🔥 baris pertama: ada nomor + teks
+
+            doc.setTextColor(0,0,0); // nomor hitam
+            doc.text(nomor, marginLeft, y);
+
+            doc.setTextColor(...warna); // teks berwarna
+            doc.text(l, marginLeft + 10, y); // geser dikit
+        } else {
+            // 🔥 baris lanjutan (tanpa nomor)
+
+            doc.setTextColor(...warna);
+            doc.text(l, marginLeft + 10, y);
+        }
+
+        y += lineHeight;
     });
 });
 
-function hexToRgb(hex){
-    if(hex === "red") return [255,0,0];
-    if(hex === "blue") return [0,0,255];
-    if(hex === "black") return [0,0,0];
-
-    hex = hex.replace("#","");
-    return [
-        parseInt(hex.substring(0,2),16),
-        parseInt(hex.substring(2,4),16),
-        parseInt(hex.substring(4,6),16)
-    ];
-}
-
-// ===== LOADING BUTTON =====
-function setLoading(state){
-    const btn = document.getElementById("btnDownload");
-
-    if(state){
-        btn.style.backgroundColor = "#999";
-        btn.innerText = "Processing...";
-        btn.disabled = true;
-    } else {
-        btn.style.backgroundColor = "#4CAF50";
-        btn.innerText = "DOWNLOAD";
-        btn.disabled = false;
-    }
-}
-
-function download(){
-    setLoading(true);
-
-    const { jsPDF } = window.jspdf;
-    let doc = new jsPDF();
-
-    let jawaban = input.innerText || "-";
-
-    let teksAwal = "Steering system (sistem kemudi) adalah ";
-    let teksAkhir = " yang berfungsi untuk mengontrol arah gerak kendaraan dengan cara membelokkan roda.";
-
-    function buatPDF(){
-
-        let lebar = doc.internal.pageSize.getWidth();
-
-        doc.setFont(undefined, "bold");
-        doc.setFontSize(12);
-        doc.text("BASIC AUTOMOTIVE TECHNOLOGY", 45, 18);
-
-        doc.setFont(undefined, "normal");
-        doc.setFontSize(10);
-        doc.text("Materi Pelatihan Otomotif Dasar", 45, 24);
-
-        doc.setFontSize(16);
-        doc.text("STEERING SYSTEM", lebar/2, 35, {align:"center"});
-
-        doc.line(20, 40, lebar-20, 40);
-
-        let fullText = teksAwal + jawaban + teksAkhir;
-        let lines = doc.splitTextToSize(fullText, 170);
-
-        let y = 50;
-        doc.setFontSize(12);
-
-        lines.forEach(line => {
-            doc.text(line, 20, y);
-            y += 7;
-        });
-
-        let gambar = document.getElementById("gambarMateri");
-
-        try {
-            let canvas = document.createElement("canvas");
-            let ctx = canvas.getContext("2d");
-
-            canvas.width = gambar.naturalWidth;
-            canvas.height = gambar.naturalHeight;
-
-            ctx.drawImage(gambar, 0, 0);
-
-            let imgData = canvas.toDataURL("image/png");
-
-            doc.addImage(imgData, "PNG", 20, y + 10, 170, 90);
-            y += 110;
-        } catch(e){
-            console.log("gambar gagal");
+            y += 5;
         }
 
-        doc.text("Keterangan:", 20, y);
-        y += 10;
+        // TEXT
+        doc.setFontSize(11);
+        doc.setTextColor(0,0,0);
 
-        inputsTambahan.forEach((el, index) => {
-            let isi = el.innerText || "-";
-            doc.text((index + 1) + ". " + isi, 25, y);
-            y += 7;
+        let elements = document.querySelectorAll("p");
+
+        elements.forEach(el => {
+
+            let style = window.getComputedStyle(el);
+            let color = style.color;
+
+            let rgb = color.match(/\d+/g);
+            if(rgb){
+                doc.setTextColor(parseInt(rgb[0]), parseInt(rgb[1]), parseInt(rgb[2]));
+            }
+
+            let text = el.innerText.trim();
+            if(text !== ""){
+                let lines = doc.splitTextToSize(text, 170);
+
+                lines.forEach(line => {
+                    if (y > pageHeight - 20) {
+                        doc.addPage();
+                        y = marginTop;
+                    }
+
+                    doc.text(line, marginLeft, y);
+                    y += lineHeight;
+                });
+
+                y += 2;
+            }
         });
 
-        doc.save("STEERING SYSTEM.pdf");
+        doc.setFontSize(11);
+        doc.setTextColor(0,0,0);
 
-        setLoading(false);
-    }
 
-    let logo = new Image();
-    logo.src = "https://cdn.jsdelivr.net/gh/dadangtrilaksono78-cpu/Materi-Mbah-Dudunk@main/logo.png";
+        // SAVE
+        doc.save("wheel-alignment.pdf");
 
-    logo.onload = function(){
-        doc.addImage(logo, "PNG", 20, 10, 20, 20);
-        buatPDF();
-    };
+        btn.innerHTML = "DOWNLOAD";
+        btn.classList.remove("loading");
+        btn.disabled = false;
 
-    logo.onerror = function(){
-        buatPDF();
-    };
+    }, 300);
 }
 </script>
 
