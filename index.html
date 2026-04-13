@@ -9,90 +9,92 @@
     body {
         margin: 0;
         font-family: 'Poppins', sans-serif;
-        background: #0f172a;
-        color: white;
+        background: #f1f5f9;
     }
 
     header {
-        padding: 20px;
+        padding: 18px;
         text-align: center;
-        font-size: 22px;
         font-weight: bold;
-        background: #020617;
-        border-bottom: 1px solid rgba(255,255,255,0.1);
+        background: #2563eb;
+        color: white;
+        font-size: 18px;
     }
 
     .container {
         padding: 20px;
+        padding-bottom: 80px; /* space for navbar */
     }
 
     .grid {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-        gap: 20px;
+        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+        gap: 15px;
     }
 
     .card {
-        background: linear-gradient(145deg, #1e293b, #020617);
-        border-radius: 20px;
-        padding: 20px;
+        background: white;
+        border-radius: 18px;
+        padding: 15px;
         text-align: center;
         text-decoration: none;
-        color: white;
-        box-shadow: 0 0 15px rgba(0,255,255,0.1);
-        transition: 0.3s;
-        position: relative;
-        overflow: hidden;
-    }
-
-    .card::before {
-        content: "";
-        position: absolute;
-        width: 100px;
-        height: 100px;
-        background: rgba(0,255,255,0.2);
-        border-radius: 50%;
-        top: -30px;
-        right: -30px;
-        transition: 0.5s;
-    }
-
-    .card:hover::before {
-        transform: scale(2);
+        color: black;
+        box-shadow: 0 5px 12px rgba(0,0,0,0.1);
+        transition: 0.2s;
     }
 
     .card:hover {
-        transform: translateY(-8px);
-        box-shadow: 0 0 25px rgba(0,255,255,0.4);
+        transform: translateY(-5px);
     }
 
     .icon {
-        font-size: 40px;
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        background: #2563eb;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: auto;
+        color: white;
+        font-size: 26px;
         margin-bottom: 10px;
     }
 
     .title {
-        font-size: 14px;
+        font-size: 13px;
         font-weight: 600;
     }
 
-    .badge {
-        position: absolute;
-        top: 10px;
-        right: 10px;
-        background: #22c55e;
-        color: black;
-        font-size: 10px;
-        padding: 4px 7px;
-        border-radius: 10px;
+    /* Bottom Navbar */
+    .navbar {
+        position: fixed;
+        bottom: 0;
+        width: 100%;
+        background: white;
+        display: flex;
+        justify-content: space-around;
+        padding: 10px 0;
+        box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+        border-top-left-radius: 15px;
+        border-top-right-radius: 15px;
+    }
+
+    .nav-item {
+        text-align: center;
+        font-size: 12px;
+        color: #64748b;
+        text-decoration: none;
+    }
+
+    .nav-item.active {
+        color: #2563eb;
         font-weight: bold;
     }
 
-    footer {
-        text-align: center;
-        padding: 15px;
-        font-size: 12px;
-        color: #94a3b8;
+    .nav-icon {
+        font-size: 20px;
+        display: block;
     }
 </style>
 </head>
@@ -100,7 +102,7 @@
 <body>
 
 <header>
-    ⚡ MATERI OTOMOTIF MODERN
+    🚗 Materi Otomotif
 </header>
 
 <div class="container">
@@ -125,16 +127,31 @@
         <a href="materi/electric-system/" class="card">
             <div class="icon">⚡</div>
             <div class="title">Electric System</div>
-            <div class="badge">NEW</div>
         </a>
 
     </div>
 
 </div>
 
-<footer>
-    © 2026 Materi Mbah Dudunk
-</footer>
+<!-- Bottom Navigation -->
+<div class="navbar">
+    <a href="#" class="nav-item active">
+        <span class="nav-icon">🏠</span>
+        Home
+    </a>
+    <a href="#" class="nav-item">
+        <span class="nav-icon">📚</span>
+        Materi
+    </a>
+    <a href="#" class="nav-item">
+        <span class="nav-icon">📝</span>
+        Tugas
+    </a>
+    <a href="#" class="nav-item">
+        <span class="nav-icon">👤</span>
+        Profil
+    </a>
+</div>
 
 </body>
 </html>
