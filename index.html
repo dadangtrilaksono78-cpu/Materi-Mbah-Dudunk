@@ -3,17 +3,17 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Materi Otomotif App</title>
+<title>Materi Otomotif</title>
 
 <style>
 body {
     margin:0;
-    font-family:'Poppins',sans-serif;
+    font-family:Arial;
     background:#0f172a;
     color:white;
 }
 
-/* Splash Screen */
+/* Splash */
 #splash {
     position:fixed;
     width:100%;
@@ -22,11 +22,9 @@ body {
     display:flex;
     justify-content:center;
     align-items:center;
-    font-size:22px;
-    z-index:9999;
+    font-size:20px;
+    z-index:10;
 }
-
-.hidden { display:none; }
 
 header {
     padding:15px;
@@ -34,57 +32,30 @@ header {
     background:#020617;
 }
 
-.container { padding:20px; padding-bottom:80px; }
+.container {
+    padding:20px;
+    padding-bottom:80px;
+}
 
 .grid {
     display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(120px,1fr));
+    grid-template-columns:repeat(2,1fr);
     gap:15px;
 }
 
 .card {
     background:#1e293b;
-    border-radius:18px;
+    border-radius:15px;
     padding:15px;
     text-align:center;
     text-decoration:none;
     color:white;
-    position:relative;
-    overflow:hidden;
-}
-
-/* Ripple Effect */
-.card:active::after {
-    content:"";
-    position:absolute;
-    width:100px;
-    height:100px;
-    background:rgba(255,255,255,0.3);
-    border-radius:50%;
-    top:50%; left:50%;
-    transform:translate(-50%,-50%);
-    animation:ripple 0.5s linear;
-}
-
-@keyframes ripple {
-    from { transform:translate(-50%,-50%) scale(0); opacity:1; }
-    to { transform:translate(-50%,-50%) scale(3); opacity:0; }
 }
 
 .icon {
-    width:60px;
-    height:60px;
-    border-radius:50%;
-    background:#2563eb;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    margin:auto;
-    font-size:26px;
+    font-size:30px;
     margin-bottom:10px;
 }
-
-.title { font-size:13px; }
 
 /* Navbar */
 .navbar {
@@ -97,48 +68,20 @@ header {
     padding:10px 0;
 }
 
-.nav-item { color:#94a3b8; text-decoration:none; text-align:center; }
-.nav-item.active { color:#3b82f6; }
-
-/* Login */
-#login {
-    position:fixed;
-    width:100%; height:100%;
-    background:#0f172a;
-    display:flex;
-    flex-direction:column;
-    justify-content:center;
-    align-items:center;
-    z-index:9998;
+.nav-item {
+    color:#94a3b8;
+    text-decoration:none;
 }
 
-input {
-    padding:10px;
-    border:none;
-    border-radius:8px;
-    margin:10px;
+.nav-item.active {
+    color:#3b82f6;
 }
-
-button {
-    padding:10px 20px;
-    border:none;
-    border-radius:8px;
-    background:#2563eb;
-    color:white;
-}
-
 </style>
 </head>
 
 <body>
 
-<div id="splash">🚗 Loading...</div>
-
-<div id="login" class="hidden">
-    <h2>Masukkan Nama</h2>
-    <input type="text" id="nama" placeholder="Nama siswa">
-    <button onclick="simpanNama()">Masuk</button>
-</div>
+<div id="splash">Loading...</div>
 
 <header>Materi Otomotif</header>
 
@@ -147,12 +90,22 @@ button {
 
 <a href="materi/wheel-alignment/" class="card">
 <div class="icon">🛞</div>
-<div class="title">Wheel Alignment</div>
+Wheel Alignment
 </a>
 
 <a href="materi/steering-system/" class="card">
 <div class="icon">🎯</div>
-<div class="title">Steering System</div>
+Steering System
+</a>
+
+<a href="materi/brake-system/" class="card">
+<div class="icon">🛑</div>
+Brake System
+</a>
+
+<a href="materi/electric-system/" class="card">
+<div class="icon">⚡</div>
+Electric System
 </a>
 
 </div>
@@ -166,29 +119,11 @@ button {
 </div>
 
 <script>
-// Splash
-setTimeout(()=>{
- document.getElementById('splash').classList.add('hidden');
- cekLogin();
-},1500);
-
-// Login Check
-function cekLogin(){
- let nama = localStorage.getItem('nama');
- if(!nama){
-  document.getElementById('login').classList.remove('hidden');
- }
-}
-
-function simpanNama(){
- let nama = document.getElementById('nama').value;
- localStorage.setItem('nama', nama);
- document.getElementById('login').classList.add('hidden');
-}
-
-// Offline Mode
-if('serviceWorker' in navigator){
- navigator.serviceWorker.register('sw.js');
+// FIX splash biar gak nyangkut
+window.onload = function(){
+    setTimeout(()=>{
+        document.getElementById('splash').style.display='none';
+    },1000);
 }
 </script>
 
