@@ -1,1 +1,123 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Materi Otomotif</title>
 
+<style>
+    body {
+        margin: 0;
+        font-family: 'Segoe UI', Tahoma, sans-serif;
+        background: #f4f6f9;
+    }
+
+    header {
+        background: linear-gradient(135deg, #0f2027, #2c5364);
+        color: white;
+        padding: 20px;
+        text-align: center;
+        font-size: 20px;
+        font-weight: bold;
+        letter-spacing: 1px;
+    }
+
+    .container {
+        padding: 20px;
+    }
+
+    .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+        gap: 15px;
+    }
+
+    .card {
+        background: white;
+        border-radius: 16px;
+        padding: 20px;
+        text-align: center;
+        text-decoration: none;
+        color: black;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        transition: 0.3s;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .card:hover {
+        transform: translateY(-5px) scale(1.03);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+    }
+
+    .icon {
+        font-size: 40px;
+        margin-bottom: 10px;
+    }
+
+    .title {
+        font-size: 14px;
+        font-weight: 600;
+    }
+
+    .badge {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background: red;
+        color: white;
+        font-size: 10px;
+        padding: 3px 6px;
+        border-radius: 8px;
+    }
+
+    footer {
+        text-align: center;
+        padding: 15px;
+        font-size: 12px;
+        color: gray;
+    }
+</style>
+</head>
+
+<body>
+
+<header>
+    🚗 MATERI OTOMOTIF
+</header>
+
+<div class="container">
+
+    <div class="grid">
+
+        <a href="materi/wheel-alignment/" class="card">
+            <div class="icon">🛞</div>
+            <div class="title">Wheel Alignment</div>
+        </a>
+
+        <a href="materi/steering-system/" class="card">
+            <div class="icon">🎯</div>
+            <div class="title">Steering System</div>
+        </a>
+
+        <a href="materi/suspensi/" class="card">
+            <div class="icon">⚙️</div>
+            <div class="title">Suspensi</div>
+        </a>
+
+        <a href="materi/rem/" class="card">
+            <div class="icon">🛑</div>
+            <div class="title">Sistem Rem</div>
+            <div class="badge">NEW</div>
+        </a>
+
+    </div>
+
+</div>
+
+<footer>
+    © 2026 Materi Mbah Dudunk
+</footer>
+
+</body>
+</html>
